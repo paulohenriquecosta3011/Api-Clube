@@ -1,97 +1,79 @@
-API do Clube
-Descrição do Sistema
+ClubeUva API
 
-Esta API foi desenvolvida para gerenciar usuários (sócios e administradores) e convidados de um clube, com foco na integração com aplicações externas, como sistemas Delphi e futuros apps móveis.
+API for managing users, invitations, and guests.
+Developed in Node.js with Express, following a layered architecture (Controller → Service → Middleware → Repository/Model).
+This API can be consumed by any client application.
 
-O fluxo principal é:
+Technologies
 
-Usuários (sócios e administradores)
+Node.js / Express
 
-Administradores podem cadastrar outros usuários (admins ou sócios).
+MySQL
 
-Sócios podem ser registrados pelo sistema Delphi existente.
+Jest + Supertest (Integration Tests)
 
-Convidados
+dotenv, bcrypt, jsonwebtoken, multer
 
-Usuários podem registrar convidados, enviando foto e CPF.
+Swagger (OpenAPI 3.0)
 
-Futuramente, será possível gerar QR codes para os convites.
+Project Structure
+src/
+├─ controllers/   # Handle requests and call services
+├─ services/      # Business logic
+├─ middlewares/   # Authentication, validation, and error handling
+├─ routes/        # API endpoints
+├─ models/        # Database access
+├─ db/            # Database scripts (schema.sql)
+tests/
+├─ integration/   # API integration tests
+Running the Project
 
-A portaria poderá verificar os convites e permitir a entrada do convidado, automatizando ou não a abertura da cancela.
+Clone the repository:
 
-Integração com outros sistemas
-
-A aplicação Delphi do clube já consome endpoints de cadastro de sócios e consulta de convidados.
-
-Futuras integrações permitirão enviar QR codes e automatizar a portaria.
-
-O objetivo é ter uma API centralizada, segura e escalável, que permita futuras integrações com apps móveis e sistemas internos do clube.
-
-
-Endpoints Disponíveis
-Usuários (/api/users)
-
-POST /register – Registrar usuário (Admin ou Sócio)
-
-POST /login – Login de usuário
-
-POST /generate-code – Gerar código de validação via e-mail
-
-POST /validate-code – Validar código de e-mail
-
-POST /setPassword – Definir senha do usuário
-
-Convidados (/api/convidados)
-
-POST /registerConvidado – Registrar convidado com foto
-
-Integração com Sistema Delphi
-
-A aplicação desktop em Delphi já consome alguns endpoints da API:
-
-Cadastro de sócios → envia dados para /api/users/register com tipo S
-
-Consulta de convidados → permite que a portaria verifique convites existentes
-
-Futuras funcionalidades planejadas:
-
-A portaria poderá receber QR codes de convites gerados via API
-
-A abertura de cancelas será automatizada ou manual, dependendo da configuração
-
-Testes
-
-Estrutura de testes unitários e de integração pronta, usando Jest e Supertest
-
-Testes específicos para usuários e convidados estão em src/tests/integration/
-
-Funcionalidades Planejadas
-
-Endpoint para criação de convites de convidados
-
-Geração de QR code para cada convite
-
-Integração com o sistema da portaria para leitura do QR code
-
-
-Como rodar a API localmente
-
-Clonar o repositório
-
-git clone <URL_DO_REPO>
-cd apis
-
-Instalar dependências
-
+git clone <URL_OF_REPO>
+cd Apis
 npm install
 
+Run the API:
 
-Configurar variáveis de ambiente
-Criar um arquivo .env na raiz do projeto com, por exemplo:
+npm start
 
-DB_HOST=localhost
-DB_USER=root
-DB_PASSWORD=senha
-DB_NAME=nome_do_banco
-JWT_SECRET=seu_segredo
-PORT=3001
+Run tests:
+
+NODE_ENV=test npx jest --runInBand
+
+Swagger docs available at:
+http://localhost:3001/api-docs
+
+API Endpoints
+Users
+Method	Endpoint	Description
+POST	/users/register	Create a new user
+POST	/users/login	User login
+POST	/users/generate-code	Generate a temporary code
+POST	/users/validate-code	Validate a temporary code
+POST	/users/setPassword	Set a new password
+Convites
+Method	Endpoint	Description
+POST	/convites/register	Register a new invitation (user)
+POST	/convites/download	Download invitations (machine)
+GET	/convites/meus	List my invitations (user)
+Convidados
+Method	Endpoint	Description
+POST	/convidados/registerConvidado	Register a new guest
+Maquinas
+Method	Endpoint	Description
+POST	/maquinas/novo-token	Create a new machine token
+Notes for Developers / Recruiters
+
+Clean layered architecture: Controller → Service → Repository
+
+Centralized error handling middleware
+
+Separation of responsibilities for easier maintenance
+
+Two database environments: dev/prod and test
+
+Fully tested API with Jest + Supertest integration tests
+
+Swagger documentation for all endpoints

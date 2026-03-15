@@ -2,6 +2,7 @@
 import { AppError } from "../utils/AppError.js";
 
 export function validateEmail(fieldName = "email") {
+  
   return (req, res, next) => {
     const email = req.body[fieldName];
 

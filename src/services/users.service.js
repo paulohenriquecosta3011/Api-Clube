@@ -13,53 +13,53 @@ import { generateToken } from "../utils/generateToken.js";
 import { verifyToken } from "../utils/verifyToken.js"; // certifique-se que o path está correto
 import generateVerificationCode from '../utils/generateVerificationCode.js';
 
+
 //cadastro
 export async function registerUserService({ name, email, id_base, tipo_user,id_empresa }) {
- 
-    // Cria o usuário sem a senha 
+     // Cria o usuário sem a senha 
     const newUser = await createUser({ name, email, id_base, tipo_user, id_empresa});
     return newUser;
 
 }
 
 //Login
-export async function loginUserService({ email, password }) {
+export async function loginUserService({ email, password, id_empresa }) {
 
-  const user = await findUserByEmail(email);
+  const user = await findUserByEmail(email, id_empresa);
 
   if (!user) {
-
-    throw new AppError(
-      "Usuário não encontrado",
-      404,
-      "TIPO_USUÁRIO_INVALIDO",
-      true
-    ); 
+    throw new AppError("User not found", 404, "USER_NOT_FOUND", true);
   }
 
-  
+  if (user.status !== "ATIVO") {
+    throw new AppError("User is not active", 403, "USER_INACTIVE", true);
+  }
+
   if (!user.password) {
     throw new AppError(
-      "Usuário não possui senha ",
+      "User has no password set",
       400,
-      "TIPO_PASSWORD_INVALIDO",
+      "PASSWORD_NOT_SET",
       true
     );
 
 
     }
+
+    
+ 
   const passwordMatch = await bcrypt.compare(password, user.password);
   if (!passwordMatch) {
     throw new AppError(
-      "Senha inválida",
+      "Invalid password",
       401,
-      "TIPO_PASSWORD_INVALIDO",
+      "INVALID_PASSWORD",
       true
     );
 
 
   }
-
+  
   const token = generateToken({ 
     id: user.id_user, 
     email: user.email, 
@@ -78,14 +78,14 @@ export async function loginUserService({ email, password }) {
 
 
 //update no user
-export async function generateAndSendCodeService({ email}){
-  const user = await findUserByEmail(email);
+export async function generateAndSendCodeService({email, id_empresa }){
+  const user = await findUserByEmail(email, id_empresa);
   
   if (!user) {
     throw new AppError(
-      "Usuário não encontrado",
-      401,
-      "TIPO_USER_INVALIDO",
+      "User not found",
+      404,
+      "USER_NOT_FOUND",
       true
     );
   }
@@ -96,16 +96,16 @@ export async function generateAndSendCodeService({ email}){
   //const codigo = Math.floor(100000 + Math.random() * 900000).toString(); // ex: 6 dígitos
   const codigo = generateVerificationCode();
 
-  const tokenTemporario = generateToken({ email }, "15m");  
+  const tokenTemporario = generateToken({ email , id_empresa }, "15m");  
 
   // Atualiza no banco
-  const resultado = await createCodigoValidacao(email, codigo);
+  const resultado = await createCodigoValidacao(email, codigo, id_empresa);
 
     // Envia o código por e-mail
     await sendValidationCodeEmail(email, codigo);
     
     return {
-      message: "Código enviado com sucesso!",
+      message: "Verification code sent successfully!",
       token: tokenTemporario,
     }; 
 }
@@ -113,65 +113,54 @@ export async function generateAndSendCodeService({ email}){
 
 //validateCode
 
-export async function validateCodeService({ codigo, token }) {
+
+export async function validateCodeService({ code, token }) {  
   const decoded = verifyToken(token);
   const email = decoded.email;
 
-  const codigoBanco = await findCodigoByEmail(email);
+  const codigoBanco = await findCodigoByEmail(email,decoded.id_empresa);
 
   if (!codigoBanco) {
     throw new AppError(
-      "Código não encontrado para este email",
+      "Verification code not found for this email",
       400,
-      "TIPO_CODIGO_INVALIDO",
+      "VERIFICATION_CODE_NOT_FOUND",
       true
     );   
 
   }
  
-  if (String(codigo).trim() !== String(codigoBanco).trim()) {
+  if (String(code).trim() !== String(codigoBanco).trim()) {
     throw new AppError(
-      "Código inválido",
+      "Invalid verification code",
       400,
-      "TIPO_CODIGO_INVALIDO",
+      "INVALID_VERIFICATION_CODE",
       true
     );   
 
 
-    throw new AppError("Código inválido", 400);
   }
 
   return {
-    message: "Código validado com sucesso!",
-    emailConfirmado: email,
+    message: "Verification code validated successfully",
+    emailConfirmed: email,
   };
 }
 
   
-export async function setPasswordService({email,password}){
-  try{
-    // Aqui futuramente você vai fazer o hash e o update no banco
-
+export async function setPasswordService({email,password,id_empresa}){
     // Define o número de rounds do salt (quanto maior, mais seguro, mas mais lento)
     const saltRounds = 10;
 
     // Gera o hash da senha
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    await updatePasswordRepository(email, hashedPassword);    
+    await updatePasswordRepository(email, hashedPassword, id_empresa);
 
     return {
-       message: "Senha recebida no service com sucesso!",
-       emailRecebido: email,
-       hashedPassword
+       message: "Password received successfully in service",
+       emailReceived: email
     };
 
-  }catch(error){ 
-    throw new AppError(
-    "Erro ao definir a senha.",
-    500,
-    "SET_PASSWORD_ERROR",
-    true
-  );
-  }
 }
+

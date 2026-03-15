@@ -3,6 +3,7 @@ import nodemailer from 'nodemailer';
 
 export async function sendValidationCodeEmail(email, codigo) {
   try {
+      console.log(" enviando email 1 ")
     const transporter = nodemailer.createTransport({
       service: 'gmail', // ou use 'hotmail', 'outlook' ou SMTP personalizado
       auth: {
@@ -10,7 +11,7 @@ export async function sendValidationCodeEmail(email, codigo) {
         pass: process.env.EMAIL_PASS,
       },
     });
-
+    console.log(" enviando email 2 ")
     const mailOptions = {
       from: `"Clube da Uva" <${process.env.EMAIL_USER}>`,
       to: email,
@@ -18,6 +19,7 @@ export async function sendValidationCodeEmail(email, codigo) {
       text: `Seu código de validação é: ${codigo}`,
     };
 
+    console.log(" enviando email 3 ")
     const info = await transporter.sendMail(mailOptions);
     console.log('E-mail enviado:', info.response);
   } catch (error) {

@@ -1,24 +1,57 @@
 // convidados.routes.js
 import { Router } from "express";
 import { Register } from "../controllers/convidado.controller.js";
-//import { VerificarConvidado } from "../middlewares/verificarConvidado.js";
-import {  validateRequiredFields,
-          checkToken,
-          VerificarConvidado 
-  } from "../middlewares/index.js";
-
-
-import upload from "../middlewares/uploadMiddleware.js";  // Certifique-se de importar corretamente o multer
+import { validateRequiredFields, checkToken } from "../middlewares/index.js";
+import upload from "../middlewares/uploadMiddleware.js";
 
 const router = Router();
 
-// Ordem dos middlewares: primeiro o multer, depois a verificação e finalmente o registro
+/**
+ * @swagger
+ * tags:
+ *   name: Convidados
+ *   description: Guest management
+ */
+
+/**
+ * @swagger
+ * /convidados/registerConvidado:
+ *   post:
+ *     summary: Register a new guest
+ *     tags: [Convidados]
+ *     security:
+ *       - bearerAuth: []  # checkToken required
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               nome:
+ *                 type: string
+ *               cpf:
+ *                 type: string
+ *               foto:
+ *                 type: string
+ *                 format: binary
+ *             required:
+ *               - nome
+ *               - cpf
+ *               - foto
+ *     responses:
+ *       201:
+ *         description: Guest registered successfully
+ *       400:
+ *         description: Invalid guest data
+ *       401:
+ *         description: Unauthorized
+ */
 router.post("/registerConvidado", 
   checkToken,
-  upload.single('foto'),  // Processa o form-data e o arquivo
-  validateRequiredFields(["nome", "cpf"]),    
-  VerificarConvidado,     // Verifica o CPF
-  Register                // Registra o convidado
+  upload.single('foto'),
+  validateRequiredFields(["nome", "cpf"]),
+  Register
 );
 
 export default router;

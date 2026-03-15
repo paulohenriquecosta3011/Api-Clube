@@ -7,44 +7,39 @@ describe('authorizeAdmin middleware', () => {
   let next;
 
   beforeEach(() => {
-    // req e res podem ser objetos vazios ou com o que for necessário
     req = {};
     res = {};
     next = jest.fn();
   });
 
-  it('deve chamar next() sem argumentos se req.user.tipo_user for "A"', () => {
+  it('should call next() without arguments if req.user.tipo_user is "A"', () => {
     req.user = { tipo_user: 'A' };
-
     authorizeAdmin(req, res, next);
 
-    // next foi chamado uma vez, sem erro
     expect(next).toHaveBeenCalledTimes(1);
     expect(next).toHaveBeenCalledWith();
   });
 
-  it('deve chamar next com AppError se req.user não existir', () => {
-    // req.user indefinido
+  it('should call next with AppError if req.user is missing', () => {
     authorizeAdmin(req, res, next);
 
     expect(next).toHaveBeenCalledTimes(1);
     const err = next.mock.calls[0][0];
     expect(err).toBeInstanceOf(AppError);
-    expect(err.message).toBe('Acesso negado. Apenas administradores.');
+    expect(err.message).toBe('Access denied. Admins only.');
     expect(err.statusCode).toBe(403);
     expect(err.code).toBe('FORBIDDEN');
     expect(err.isOperational).toBe(true);
   });
 
-  it('deve chamar next com AppError se req.user.tipo_user não for "A"', () => {
-    req.user = { tipo_user: 'U' };  // usuário não admin
-
+  it('should call next with AppError if req.user.tipo_user is not "A"', () => {
+    req.user = { tipo_user: 'U' };
     authorizeAdmin(req, res, next);
 
     expect(next).toHaveBeenCalledTimes(1);
     const err = next.mock.calls[0][0];
     expect(err).toBeInstanceOf(AppError);
-    expect(err.message).toBe('Acesso negado. Apenas administradores.');
+    expect(err.message).toBe('Access denied. Admins only.');
     expect(err.statusCode).toBe(403);
     expect(err.code).toBe('FORBIDDEN');
     expect(err.isOperational).toBe(true);

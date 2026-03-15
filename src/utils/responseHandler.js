@@ -1,15 +1,10 @@
 // utils/responseHandler.js
+export function sendResponse(res, statusCode, message, responsePayload = null) {
+  const status = statusCode >= 400 ? 'fail' : 'success';
 
-export function sendResponse(res, statusCode, message, data = null) {
-    const responsePayload = {
-      status: 'success',
-      message,
-    };
-  
-    if (data !== null) {
-      responsePayload.data = data;
-    }
-  
-    return res.status(statusCode).json(responsePayload);
-  }
-  
+  return res.status(statusCode).json({
+    status,
+    message,
+    data: responsePayload
+  });
+}

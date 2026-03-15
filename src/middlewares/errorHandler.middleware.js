@@ -5,9 +5,8 @@ import { AppError } from "../utils/AppError.js"; // ✅ este import estava falta
 export function errorHandler(err, req, res, next) {
   const isDev = process.env.NODE_ENV !== "production";
   
+  console.log("🔥 errorHandler acionado");
   
-  console.error("Erro capturado pelo middleware:", err);
-
   if (err instanceof AppError) {
     return res.status(err.statusCode).json({
       status: err.status,

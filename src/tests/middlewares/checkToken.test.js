@@ -31,7 +31,7 @@ describe('Middleware checkToken', () => {
     next = jest.fn();
   });
 
-  test('Deve retornar 401 se o header Authorization não existir', () => {
+  test('should return 401 if Authorization header is missing', () => {
     req.headers.authorization = undefined;
 
     checkToken(req, res, next);
@@ -39,13 +39,13 @@ describe('Middleware checkToken', () => {
     expect(res.status).toHaveBeenCalledWith(401);
     expect(res.json).toHaveBeenCalledWith({
       status: 'fail',
-      message: 'Token não fornecido',
-      code: 'TOKEN_NAO_FORNECIDO',
+      message: 'Token not provided',
+      code: 'TOKEN_NOT_PROVIDED',
     });
     expect(next).not.toHaveBeenCalled();
   });
 
-  test('Deve retornar 401 se o header Authorization não começar com Bearer', () => {
+  test('should return 401 if Authorization header does not start with Bearer', () => {
     req.headers.authorization = 'Token xyz';
 
     checkToken(req, res, next);
@@ -53,13 +53,13 @@ describe('Middleware checkToken', () => {
     expect(res.status).toHaveBeenCalledWith(401);
     expect(res.json).toHaveBeenCalledWith({
       status: 'fail',
-      message: 'Token não fornecido',
-      code: 'TOKEN_NAO_FORNECIDO',
+      message: 'Token not provided',
+      code: 'TOKEN_NOT_PROVIDED',
     });
     expect(next).not.toHaveBeenCalled();
   });
 
-  test('Deve retornar 401 se jwt.verify lançar TokenExpiredError', () => {
+  test('should return 401 if jwt.verify throws TokenExpiredError', () => {
     req.headers.authorization = 'Bearer token_invalido';
 
     jwt.verify.mockImplementation(() => {
@@ -73,13 +73,13 @@ describe('Middleware checkToken', () => {
     expect(res.status).toHaveBeenCalledWith(401);
     expect(res.json).toHaveBeenCalledWith({
       status: 'fail',
-      message: 'Token expirado',
-      code: 'TOKEN_EXPIRADO',
+      message: 'Token expired',
+      code: 'TOKEN_EXPIRED',
     });
     expect(next).not.toHaveBeenCalled();
   });
 
-  test('Deve retornar 401 se jwt.verify lançar JsonWebTokenError', () => {
+  test('should return 401 if jwt.verify throws JsonWebTokenError', () => {
     req.headers.authorization = 'Bearer token_invalido';
 
     jwt.verify.mockImplementation(() => {
@@ -93,13 +93,13 @@ describe('Middleware checkToken', () => {
     expect(res.status).toHaveBeenCalledWith(401);
     expect(res.json).toHaveBeenCalledWith({
       status: 'fail',
-      message: 'Token inválido',
-      code: 'TOKEN_INVALIDO',
+      message: 'Invalid token',
+      code: 'TOKEN_INVALID',
     });
     expect(next).not.toHaveBeenCalled();
   });
 
-  test('Deve retornar 401 se token decodificado não tiver tipo_user', () => {
+  test('should return 401 if decoded token does not contain tipo_user', () => {
     req.headers.authorization = 'Bearer valid_token';
 
     jwt.verify.mockReturnValue({ sub: 123 });
@@ -109,13 +109,13 @@ describe('Middleware checkToken', () => {
     expect(res.status).toHaveBeenCalledWith(401);
     expect(res.json).toHaveBeenCalledWith({
       status: 'fail',
-      message: 'Token malformado ou inválido',
-      code: 'TOKEN_INVALIDO',
+      message: 'Malformed or invalid token',
+      code: 'TOKEN_INVALID',
     });
     expect(next).not.toHaveBeenCalled();
   });
 
-  test('Deve chamar next e setar req.user se token for válido', () => {
+  test('should call next and set req.user if token is valid', () => {
     req.headers.authorization = 'Bearer valid_token';
 
     const payload = { sub: 123, tipo_user: 'admin' };
@@ -129,11 +129,11 @@ describe('Middleware checkToken', () => {
     expect(res.json).not.toHaveBeenCalled();
   });
 
-  test('Deve retornar 500 se lançar erro inesperado', () => {
+  test('should return 500 if an unexpected error occurs', () => {
     req.headers.authorization = 'Bearer valid_token';
 
     jwt.verify.mockImplementation(() => {
-      throw new Error('Erro inesperado');
+      throw new Error('Unexpected error');
     });
 
     checkToken(req, res, next);
@@ -141,17 +141,17 @@ describe('Middleware checkToken', () => {
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.json).toHaveBeenCalledWith({
       status: 'error',
-      message: 'Erro interno no servidor',
+      message: 'Internal server error',
       code: 'SERVER_ERROR',
     });
     expect(next).not.toHaveBeenCalled();
   });
 
-  test('Deve retornar erro customizado do AppError', () => {
+  test('should return custom AppError', () => {
     req.headers.authorization = 'Bearer valid_token';
 
     jwt.verify.mockImplementation(() => {
-      throw new AppError('Erro customizado', 403, 'ERRO_CUSTOM', true);
+      throw new AppError('Custom error', 403, 'CUSTOM_ERROR', true);
     });
 
     checkToken(req, res, next);
@@ -159,8 +159,8 @@ describe('Middleware checkToken', () => {
     expect(res.status).toHaveBeenCalledWith(403);
     expect(res.json).toHaveBeenCalledWith({
       status: 'fail',
-      message: 'Erro customizado',
-      code: 'ERRO_CUSTOM',
+      message: 'Custom error',
+      code: 'CUSTOM_ERROR',
     });
     expect(next).not.toHaveBeenCalled();
   });

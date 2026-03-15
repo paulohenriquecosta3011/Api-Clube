@@ -15,7 +15,7 @@ export async function VerificarConvidado(req, res, next) {
     const convidado = await buscarPorCpf(cpfLimpo);
 
     if (convidado) {
-      throw new AppError('Convidado já cadastrado.', 409, 'CONVIDADO_EXISTENTE');
+      throw new AppError('CPF already registered', 409, 'CONVIDADO_EXISTENTE');
     }
 
     next();

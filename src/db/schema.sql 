@@ -1,0 +1,93 @@
+-- Schema for ClubeUva API
+
+-- Table: cidades
+CREATE TABLE cidades (
+  id_cidade INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  nome VARCHAR(100),
+  uf_sigla CHAR(2),
+  codigo_municipio VARCHAR(20),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id_cidade)
+);
+
+-- Table: convidados
+CREATE TABLE convidados (
+  cpf VARCHAR(15) NOT NULL,
+  nome VARCHAR(255) NOT NULL,
+  data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  foto VARCHAR(255),
+  status ENUM('ATIVO','INATIVO','EXCLUIDO') NOT NULL DEFAULT 'ATIVO',
+  PRIMARY KEY (cpf)
+);
+
+-- Table: convites
+CREATE TABLE convites (
+  id_convite INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  cpf_convidado VARCHAR(15) NOT NULL,
+  id_user INT,
+  dataconvite DATE NOT NULL,
+  status ENUM('ATIVO','INATIVO','EXCLUIDO') NOT NULL DEFAULT 'ATIVO',
+  token VARCHAR(64),
+  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id_convite),
+  FOREIGN KEY (cpf_convidado) REFERENCES convidados(cpf)
+);
+
+-- Table: convites_downloads
+CREATE TABLE convites_downloads (
+  id_download INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  id_convite INT UNSIGNED NOT NULL,
+  id_maquina INT NOT NULL,
+  data_download TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (id_download),
+  FOREIGN KEY (id_convite) REFERENCES convites(id_convite)
+);
+
+-- Table: empresas
+CREATE TABLE empresas (
+  id_empresa INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  nome VARCHAR(150) NOT NULL,
+  cnpj CHAR(18) UNIQUE,
+  id_cidade INT UNSIGNED,
+  endereco VARCHAR(255),
+  telefone VARCHAR(20),
+  email VARCHAR(100),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  status ENUM('ATIVO','INATIVO','EXCLUIDO') NOT NULL DEFAULT 'ATIVO',
+  PRIMARY KEY (id_empresa),
+  FOREIGN KEY (id_cidade) REFERENCES cidades(id_cidade)
+);
+
+-- Table: maquinas
+CREATE TABLE maquinas (
+  id_maquina INT NOT NULL AUTO_INCREMENT,
+  id_empresa INT UNSIGNED NOT NULL,
+  nome VARCHAR(100) NOT NULL,
+  token_maquina VARCHAR(255) NOT NULL UNIQUE,
+  descricao VARCHAR(255),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  status ENUM('ATIVO','INATIVO','EXCLUIDO') NOT NULL DEFAULT 'ATIVO',
+  PRIMARY KEY (id_maquina),
+  FOREIGN KEY (id_empresa) REFERENCES empresas(id_empresa)
+);
+
+-- Table: users
+CREATE TABLE users (
+  id_user INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  id_base INT,
+  name VARCHAR(63) NOT NULL,
+  email VARCHAR(127) NOT NULL,
+  nasc DATE,
+  password VARCHAR(127),
+  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CodigoValidacao INT,
+  id_empresa INT UNSIGNED NOT NULL,
+  tipo_user CHAR(1) NOT NULL DEFAULT 'S',
+  status ENUM('ATIVO','INATIVO','EXCLUIDO') NOT NULL DEFAULT 'ATIVO',
+  PRIMARY KEY (id_user),
+  FOREIGN KEY (id_empresa) REFERENCES empresas(id_empresa)
+);

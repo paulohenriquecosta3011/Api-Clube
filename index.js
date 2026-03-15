@@ -1,11 +1,12 @@
-
+// index.js
 import 'dotenv/config';
 import app from './src/app.js';
 
-const PORT = 3001;
-const HOST = '192.168.1.19';
+const PORT = process.env.PORT || 3001;
+const HOST = process.env.HOST || '0.0.0.0';
 
-app.listen(PORT, HOST, () => {
-  console.log(`Server running at http://${HOST}:${PORT}`);
-});
-
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(PORT, HOST, () => {
+    console.log(`Server running on ${HOST}:${PORT}`);
+  });
+}

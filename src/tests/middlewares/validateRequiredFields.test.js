@@ -10,7 +10,7 @@ describe('validateRequiredFields middleware', () => {
     next = jest.fn();
   });
 
-  it('deve chamar next() se todos os campos obrigatórios estiverem presentes', () => {
+  it('should call next() if all required fields are present', () => {
     req.body = {
       name: 'Paulo',
       email: 'paulo@example.com',
@@ -23,7 +23,7 @@ describe('validateRequiredFields middleware', () => {
     expect(next).toHaveBeenCalled();
   });
 
-  it('deve lançar AppError se algum campo obrigatório estiver ausente', () => {
+  it('should throw AppError if a required field is missing', () => {
     req.body = {
       name: 'Paulo',
       password: '123456'
@@ -32,10 +32,10 @@ describe('validateRequiredFields middleware', () => {
     const middleware = validateRequiredFields(['name', 'email', 'password']);
 
     expect(() => middleware(req, res, next)).toThrow(AppError);
-    expect(() => middleware(req, res, next)).toThrow('Os seguintes campos são obrigatórios: email');
+    expect(() => middleware(req, res, next)).toThrow('The following fields are required: email');
   });
 
-  it('deve listar múltiplos campos ausentes na mensagem de erro', () => {
+  it('should list multiple missing fields in the error message', () => {
     req.body = {
       password: '123456'
     };
@@ -43,6 +43,6 @@ describe('validateRequiredFields middleware', () => {
     const middleware = validateRequiredFields(['name', 'email', 'password']);
 
     expect(() => middleware(req, res, next)).toThrow(AppError);
-    expect(() => middleware(req, res, next)).toThrow('Os seguintes campos são obrigatórios: name, email');
+    expect(() => middleware(req, res, next)).toThrow('The following fields are required: name, email');
   });
 });

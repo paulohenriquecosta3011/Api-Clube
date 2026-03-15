@@ -1,0 +1,150 @@
+.
+├── babel.config.js
+├── estrutura_API.txt
+├── estrutura_completa.txt
+├── estrutura_pastas.txt
+├── index.js
+├── jest.config.js
+├── package.json
+├── package-lock.json
+├── README.md
+└── src
+    ├── app.js
+    ├── controllers
+    │   ├── convidado.controller.js
+    │   ├── convite.controller.js
+    │   ├── maquinas.controller.js
+    │   └── users.controller.js
+    ├── db
+    │   └── db.js
+    ├── middlewares
+    │   ├── authMiddleware.js
+    │   ├── checkToken.js
+    │   ├── errorHandler.middleware.js
+    │   ├── index.js
+    │   ├── loginRateLimiter.js
+    │   ├── uploadMiddleware.js
+    │   ├── validarTokenMaquina.js
+    │   ├── validateEmail.js
+    │   ├── validatePassword.js
+    │   ├── validateRequiredFields.js
+    │   ├── verificarConvidado.js
+    │   ├── verificarConviteExiste.js
+    │   ├── verificaremail.js
+    │   └── verifyConvidadoExiste.js
+    ├── repositories
+    │   ├── convidado.repository.js
+    │   ├── convite.repository.js
+    │   ├── machines.repository.js
+    │   ├── status.repository.js
+    │   └── users.repository.js
+    ├── routes
+    │   ├── convidados.routes.js
+    │   ├── convite.routes.js
+    │   ├── index.routes.js
+    │   ├── maquinas.routes.js
+    │   └── users.routes.js
+    ├── services
+    │   ├── convidados.service.js
+    │   ├── convite.service.js
+    │   ├── machines.service.js
+    │   ├── status.service.js
+    │   ├── users.service.js
+    │   └── validators
+    │       └── status.validator.js
+    ├── tests
+    │   ├── e2e
+    │   ├── files
+    │   │   └── test-image.jpg
+    │   ├── integration
+    │   │   ├── convidados
+    │   │   │   └── convidados.test.js
+    │   │   ├── convites
+    │   │   │   ├── downloadConvites.test.js
+    │   │   │   ├── meusconvites.test.js
+    │   │   │   └── registerConvite.test.js
+    │   │   └── users
+    │   │       ├── login.test.js
+    │   │       ├── register.test.js
+    │   │       └── users.validation.test.js
+    │   ├── middlewares
+    │   │   ├── authorizeAdmin.test.js
+    │   │   ├── checkToken.test.js
+    │   │   ├── errorHandler.test.js
+    │   │   ├── validateEmail.test.js
+    │   │   ├── validatePassword.test.js
+    │   │   └── validateRequiredFields.test.js
+    │   └── utils
+    │       ├── AppError.test.js
+    │       ├── cpfUtils.test.js
+    │       ├── extractTokenFromHeader.test.js
+    │       ├── generateToken.test.js
+    │       ├── generateVerificationCode.test.js
+    │       ├── responseHandler.test.js
+    │       ├── sendEmail.test.js
+    │       └── verifyToken.test.js
+    ├── uploads
+    │   ├── 1772906672819.jpg
+    │   ├── 1772910220707.jpg
+    │   ├── 1772910221030.jpg
+    │   ├── 1772910221104.jpg
+    │   ├── 1772910404782.jpg
+    │   ├── 1772910405062.jpg
+    │   ├── 1772910405114.jpg
+    │   ├── 1772910485816.jpg
+    │   ├── 1772910485976.jpg
+    │   ├── 1772910486001.jpg
+    │   ├── 1772910692040.jpg
+    │   ├── 1772910692221.jpg
+    │   ├── 1772910692267.jpg
+    │   ├── 1772910757406.jpg
+    │   ├── 1772910757585.jpg
+    │   ├── 1772910757607.jpg
+    │   ├── 1772910807602.jpg
+    │   ├── 1772910807757.jpg
+    │   ├── 1772910807795.jpg
+    │   ├── 1772910853677.jpg
+    │   ├── 1772911723338.jpg
+    │   ├── 1772911988908.jpg
+    │   ├── 1772914428351.jpg
+    │   ├── 1772914460426.jpg
+    │   ├── 1772914522157.jpg
+    │   ├── 1772914568179.jpg
+    │   ├── 1772914656116.jpg
+    │   ├── 1772914771063.jpg
+    │   ├── 1772914860851.jpg
+    │   ├── 1772915021308.jpg
+    │   ├── 1772915160744.jpg
+    │   ├── 1772915223577.jpg
+    │   ├── 1772915385058.jpg
+    │   ├── 1772915504889.jpg
+    │   ├── 1772915527223.jpg
+    │   ├── 1772915663822.jpg
+    │   ├── 1772915679093.jpg
+    │   ├── 1772915898561.jpg
+    │   ├── 1772916189196.jpg
+    │   ├── 1772916340563.jpg
+    │   ├── 1772916363658.jpg
+    │   ├── 1772916540564.jpg
+    │   ├── 1772916693220.jpg
+    │   ├── 1772916814837.jpg
+    │   ├── 1772916952664.jpg
+    │   ├── 1772917984238.jpg
+    │   ├── 1772918175849.jpg
+    │   ├── 1772918318698.jpg
+    │   ├── 1772918557362.jpg
+    │   ├── 1772918751456.jpg
+    │   └── 1772918785216.jpg
+    └── utils
+        ├── AppError.js
+        ├── cpfUtils.js
+        ├── extractTokenFromHeader.js
+        ├── fileUtils.js
+        ├── generateHashTest.js
+        ├── generateToken.js
+        ├── generateVerificationCode.js
+        ├── responseHandler.js
+        ├── sendEmail.js
+        └── verifyToken.js
+
+19 directories, 128 files

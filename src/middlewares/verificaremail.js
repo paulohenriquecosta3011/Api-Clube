@@ -11,8 +11,7 @@ export async function VerificarEmailExistente(req, res, next) {
 
     if (rows.length > 0) {
       // Email já existe, lançamos um erro customizado
-       
-      throw new AppError('OE-mail já está em uso.', 400, 'EMAIL_ALREADY_EXISTS', true);
+      throw new AppError('Email already in use.', 400, 'EMAIL_ALREADY_EXISTS');
     }
 
     next(); // email ok, segue para o próximo middleware/controller

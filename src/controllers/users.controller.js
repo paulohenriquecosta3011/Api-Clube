@@ -17,22 +17,21 @@ export async function register(req, res,next) {
 
     try {
           const { name, email, id_base,tipo_user = 'S' } = req.body;
-          const tiposPermitidos = ['A', 'S'];
-          if (!tiposPermitidos.includes(tipo_user)) {
+                    const allowedUserTypes = ['A', 'S'];
+          if (!allowedUserTypes.includes(tipo_user)) {
             throw new AppError(
-              "Tipo de usuário inválido. Permitidos: A (admin), S (simples).",
+              "Invalid user type. Allowed: A (admin), S (standard).",
               400,
-              "TIPO_USER_INVALIDO",
+              "USER_TYPE_INVALID",
               true
             );
           }          
-
           const token = extractTokenFromHeader(req.headers);
           const decoded = verifyToken(token);
 
           if (!decoded.id_empresa) {
             throw new AppError(
-              "Admin user must have an id_empresa to register other users.",
+              "Admin token missing company identifier.",
               403,
               "ID_EMPRESA_MISSING_IN_TOKEN",
               true
@@ -48,9 +47,9 @@ export async function register(req, res,next) {
                id_empresa: decoded.id_empresa 
           });
 
-          return sendResponse(res, 201, 'Usuário registrado com sucesso!', { user: newUser });          
+          return sendResponse(res, 201, 'User registered successfully', { user: newUser });          
       } catch (error) {
-        console.error('Erro no register controller:', error); // Log para você investigar
+        console.error('Register controller error:', error); // Log para você investigar
         next(error); // Deixa o middleware centralizado cuidar da resposta
 }
 }
@@ -59,22 +58,15 @@ export async function register(req, res,next) {
 export async function login(req, res,next) {
     
   try {
-    const { email, password } = req.body;
+    const { email, password, id_empresa } = req.body;
 
        
-    const result = await loginUserService({ email, password });
+    const result = await loginUserService({ email, password, id_empresa });
 
     return sendResponse(res, 200, 'Login successful!', { token: result.token,   user: result.user});          
 
-
-//    res.status(200).json({
-  //    message: "Login successful!",
-    //  token: result.token,
-    //  user: result.user,
-  //  });
-
   } catch (error) {
-    console.error("Error in login controller teste:", error.message);
+    console.error("Login controller error:", error.message);
 
     next(error);   
   }
@@ -82,21 +74,21 @@ export async function login(req, res,next) {
 
 export async function generateAndSendCode (req, res, next) {
     try {
-      const { email } = req.body;        
-      if (!email) {
+      const { email, id_empresa } = req.body;        
+     
+      if (!email || !id_empresa) {
         throw new AppError(
-          "Email is required.",
+          "Email and company identifier are required.",
           400,
-          "USER_UPDATE_VALIDATION",
+          "VALIDATION_REQUIRED_FIELDS",
           true
         );
-
-      }
+      }       
     // Chama o service para atualizar o usuário
-    const updatedUser = await generateAndSendCodeService({ email });
 
-    return sendResponse(res, 200, 'Código enviado com sucesso!!', { token: updatedUser.token});          
+    const updatedUser = await generateAndSendCodeService({ email,id_empresa });
 
+    return sendResponse(res, 200, 'Validation code sent successfully', { token: updatedUser.token});          
 
     //res.status(200).json({
     //  message: "Código enviado com sucesso!",
@@ -110,11 +102,11 @@ export async function generateAndSendCode (req, res, next) {
 
 export async function validateCode (req, res, next){
    try{
-    const { codigo } = req.body;
-
+   
+    const { code } = req.body;
     const token = extractTokenFromHeader(req.headers);
 
-    if (!token || !codigo) {
+    if (!token || !code) {
       throw new AppError(
         "Token and code are required.",
         400,
@@ -123,11 +115,9 @@ export async function validateCode (req, res, next){
       );
     }
 
-    const result = await validateCodeService({ token, codigo });
+    const result = await validateCodeService({ token, code });
 
-    return sendResponse(res, 200, 'Código Validado!!', { result});          
-
-    //res.status(200).json(result);
+    return sendResponse(res, 200, 'Code validated successfully', { result });
 
    }catch (error){
     next(error)
@@ -135,29 +125,40 @@ export async function validateCode (req, res, next){
 }
 
 
-export async function setPassword(req,res,next){
-
+export async function setPassword(req, res, next) {
   try {
-      const { password } = req.body;
+    const { password } = req.body;
 
-      if (!password ) {
-        throw new AppError(
-          "password is required.",
-          400,
-          "VALIDATION_PASSWORD",
-          true
-        );
-      }
-  
-      const token = extractTokenFromHeader(req.headers);
-      const decoded = verifyToken(token);
-      const email = decoded.email; 
-         
-      const result = await setPasswordService({email,password})
-      res.status(200).json(result);
+    if (!password) {
+      throw new AppError(
+        "Password is required.",
+        400,
+        "VALIDATION_PASSWORD",
+        true
+      );
+    }
 
-  }catch(error){
-    next(error)
+    // Pega o token do header e decodifica
+    const token = extractTokenFromHeader(req.headers);
+    const decoded = verifyToken(token);
+
+    const { email, id_empresa } = decoded;
+
+    if (!id_empresa) {
+      throw new AppError(
+        "Company identifier not found in token.",
+        403,
+        "ID_EMPRESA_MISSING_IN_TOKEN",
+        true
+      );
+    }
+
+    // Chama o service usando apenas o password, email vem do token
+    const result = await setPasswordService({ email, password, id_empresa });
+
+    return sendResponse(res, 200, "Password set successfully", result);
+
+  } catch (error) {
+    next(error);
   }
-
 }

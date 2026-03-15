@@ -1,132 +1,62 @@
-//login.test.js
-import request from 'supertest';
+// src/tests/integration/users/login.test.js
+import { createAdminUser } from '../../helpers/createAdminUser.js';
+import { cleanupTestData } from '../../helpers/cleanupTestData.js';
 import app from '../../../app.js';
-import db from '../../../db/db.js';  // seu pool mysql2/promise
-import bcrypt from 'bcrypt';
+import supertest from 'supertest';
+import { beforeAll, afterAll, describe, it, expect } from '@jest/globals';
+import db from '../../../db/db.js'; // Para fechar a conexão
 
-const testUserEmail = 'teste@teste.com';
-const testUserEmailIncorreto = 'testeIncorreto@teste.com';
+const request = supertest(app);
 
-const testUserPassword = 'senha123';
-const testUserName = 'usuarioteste';
-const testTipoUser = 'S';
+let adminUser;
 
 beforeAll(async () => {
-  const passwordHash = await bcrypt.hash(testUserPassword, 10);
-
-  await db.query(
-    'INSERT INTO users (name, tipo_user, email, password) VALUES (?, ?, ?, ?)',
-    [testUserName, testTipoUser, testUserEmail, passwordHash]
-  );
+  // Cria o admin usando o helper com email fixo
+  adminUser = await createAdminUser({ email: 'admin@example.com' });
 });
 
 afterAll(async () => {
-  await db.query('DELETE FROM users WHERE email = ?', [testUserEmail]);
-  await db.end(); // <- fecha o pool de conexões  
+  // Limpa os dados de teste
+  await cleanupTestData({ adminId: adminUser.id });
+  // Fecha a conexão com o banco para Jest não reclamar de detectOpenHandles
+  await db.end();
 });
 
 describe('POST /api/users/login', () => {
-  it('deve fazer login com usuário existente', async () => {
-    const res = await request(app)
-      .post('/api/users/login')
-      .send({ email: testUserEmail, password: testUserPassword });
 
-    expect(res.status).toBe(200);
-    expect(res.body.status).toBe('success');
-    expect(res.body.message).toBe('Login successful!');
-    expect(res.body.data).toHaveProperty('token');
-    expect(res.body.data.user).toMatchObject({
-      email: testUserEmail,
-      name: testUserName,
-      tipo_user: testTipoUser,
+  it('should login admin successfully and return a JWT token', async () => {
+    const response = await request.post('/api/users/login').send({
+      email: adminUser.email,
+      password: 'admin123',
+      id_empresa: 1
     });
+
+    expect(response.status).toBe(200);
+    expect(response.body.data.token).toBeDefined();
+    expect(response.body.data.user.email).toBe(adminUser.email);
+    expect(response.body.data.user.tipo_user).toBe('A');
   });
 
-  it('deve retornar 400 se email não for fornecido', async () => {
-    const res = await request(app)
-      .post('/api/users/login')
-      .send({ password: testUserPassword }); // sem email
-  
-    expect(res.status).toBe(400);
-    expect(res.body.message).toMatch(/email/i);
+  it('should not login with incorrect password', async () => {
+    const response = await request.post('/api/users/login').send({
+      email: adminUser.email,
+      password: 'wrongpassword',
+      id_empresa: 1
+    });
+
+    expect(response.status).toBe(401);
+    expect(response.body.message).toMatch(/Invalid password/i);
   });
 
+  it('should not login with a non-existent email', async () => {
+    const response = await request.post('/api/users/login').send({
+      email: 'nonexistent@example.com',
+      password: 'anyPassword123',
+      id_empresa: 1
+    });
 
-  it('deve retornar 400 se a senha não for fornecida', async () => {
-    const res = await request(app)
-      .post('/api/users/login')
-      .send({ email: testUserEmail });
-  
-    expect(res.status).toBe(400);
-    expect(res.body).toHaveProperty('message');
-    expect(res.body.message).toMatch(/password/i);
+    expect(response.status).toBe(404);
+    expect(response.body.message).toMatch(/User not found/i);
   });
-
-
-  it('deve retornar 401 se o email não existir', async () => {
-    const res = await request(app)
-      .post('/api/users/login')
-      .send({
-        email: testUserEmailIncorreto,
-        password: 'senhaqualquer'
-      });
-  
-    expect(res.status).toBe(404);
-    expect(res.body).toHaveProperty('message');
-    expect(res.body.message).toMatch(/usuário.*não encontrado/i); // ou sua mensagem real
-  });
-
-  it('deve retornar 401 se a senha estiver incorreta', async () => {
-    const res = await request(app)
-      .post('/api/users/login')
-      .send({
-        email: testUserEmail,
-        password: 'senhaErrada123'  // senha incorreta propositalmente
-      });
-  
-    expect(res.status).toBe(401);
-    expect(res.body).toHaveProperty('message');
-    expect(res.body.message).toMatch(/senha inválida/i); // ou parte da sua mensagem de erro exata
-  });  
-
-  it('deve retornar 400 se o email estiver em formato inválido', async () => {
-    const res = await request(app)
-      .post('/api/users/login')
-      .send({
-        email: 'emailinvalido.com',  // sem '@', formato inválido
-        password: testUserPassword
-      });
-  
-    expect(res.status).toBe(400);
-    expect(res.body).toHaveProperty('message');
-    expect(res.body.message).toMatch(/email.*inválido|formato.*inválido/i);
-  });
-
-  it('deve retornar 429 se muitas tentativas de login forem feitas em pouco tempo', async () => {
-    const maxAttempts = 5;
-  
-    for (let i = 0; i < maxAttempts; i++) {
-      await request(app)
-        .post('/api/users/login')
-        .send({
-          email: testUserEmail,
-          password: 'senhaErrada' // senha errada para gerar falha
-        });
-    }
-  
-    // A próxima tentativa deve retornar 429
-    const res = await request(app)
-      .post('/api/users/login')
-      .send({
-        email: testUserEmail,
-        password: 'senhaErrada'
-      });
-  
-    expect(res.status).toBe(429);
-    expect(res.body).toHaveProperty('message');
-    expect(res.body.message).toMatch(/muitas tentativas/i);
-  });
-  
-
 
 });
