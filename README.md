@@ -1,4 +1,4 @@
-# ClubeUva API
+# Clube API
 
 API for managing users, invitations, and guests.  
 Developed in Node.js with Express, following a layered architecture (Controller → Service → Middleware → Repository).  
