@@ -70,7 +70,7 @@ router.post(
 
 /**
  * @swagger
- * /users/login:
+ * /api/users/login:
  *   post:
  *     summary: User login
  *     tags: [Users]
@@ -80,19 +80,23 @@ router.post(
  *         application/json:
  *           schema:
  *             type: object
- *             properties:
- *               email:
- *                 type: string
- *               password:
- *                 type: string
  *             required:
  *               - email
  *               - password
+ *               - id_empresa
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: admin@email.com
+ *               password:
+ *                 type: string
+ *                 example: 123456
+ *               id_empresa:
+ *                 type: integer
+ *                 example: 1
  *     responses:
  *       200:
  *         description: Login successful
- *       400:
- *         description: Invalid credentials
  */
 router.post(
   "/login",
