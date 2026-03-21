@@ -3,7 +3,12 @@ import nodemailer from 'nodemailer';
 
 export async function sendValidationCodeEmail(email, codigo) {
   try {
-      console.log(" enviando email 1 ")
+    if (process.env.SEND_EMAIL !== 'true') {
+      console.log("ENVIO DE EMAIL DESABILITADO");
+      console.log(`Simulando envio para: ${email} | Código: ${codigo}`);
+      return;
+    }    
+    console.log(" enviando email 1 ")
     const transporter = nodemailer.createTransport({
       service: 'gmail', // ou use 'hotmail', 'outlook' ou SMTP personalizado
       auth: {
