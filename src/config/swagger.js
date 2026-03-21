@@ -12,8 +12,8 @@ const options = {
     },
     servers: [
       {
-        url: 'http://localhost:3001', // mesma porta que seu app
-        description: 'Development server',
+        url: process.env.BASE_URL || 'http://localhost:3001',
+        description: 'API server',        
       },
     ],
     components: {
