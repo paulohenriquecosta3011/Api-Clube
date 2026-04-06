@@ -84,11 +84,15 @@ POST /users/register
   "password": "123456"
 }
 ```
-📚 API Documentation
 
-Swagger documentation is available at:
+## 📚 API Documentation
+
+
+Swagger documentation is available locally at:
 
 http://localhost:3001/api-docs
+
+> 🚧 Production URL will be available soon (deployment in progress)
 
 🔗 API Endpoints
 Users
