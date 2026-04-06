@@ -1,11 +1,20 @@
 # Clube API
+Production-ready REST API for managing users, invitations, and guest access in a club environment.
 
-API for managing users, invitations, and guests.  
-Developed in Node.js with Express, following a layered architecture (Controller → Service → Middleware → Repository).  
-This API can be consumed by any client application or frontend.
+Built with Node.js and Express, following a clean layered architecture (Controller → Service → Middleware → Repository).
 
+This API simulates a real-world business scenario and can be consumed by any client application or frontend.
 ---
+## 💡 About the Project
+ClubeUva API is a backend system designed to simulate a real-world club management scenario, where users can generate invitations and register guests.
 
+It supports:
+- User authentication
+- Invitation generation and validation
+- Guest management
+- Machine-based invitation synchronization
+
+This API demonstrates clean architecture, business rule implementation, and secure authentication.
 ## 🚀 Technologies
 
 - Node.js / Express  
