@@ -74,8 +74,7 @@ NODE_ENV=test npx jest --runInBand
 
 ## 📌 Example Request
 
-Create User
-
+### Create User
 POST /users/register
 
 ```json
