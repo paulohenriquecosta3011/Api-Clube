@@ -59,8 +59,12 @@ export async function login(req, res,next) {
     
   try {
     const { email, password, id_empresa } = req.body;
+    console.log("LOGIN BODY:", req.body);
+    console.log("EMAIL:", email);
+    console.log("ID_EMPRESA:", id_empresa);
+    console.log("TYPE ID_EMPRESA:", typeof id_empresa);     
+    
 
-       
     const result = await loginUserService({ email, password, id_empresa });
 
     return sendResponse(res, 200, 'Login successful!', { token: result.token,   user: result.user});          
