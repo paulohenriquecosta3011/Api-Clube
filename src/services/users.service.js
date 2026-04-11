@@ -27,6 +27,10 @@ export async function loginUserService({ email, password, id_empresa }) {
 
   const user = await findUserByEmail(email, id_empresa);
 
+  console.log("EMAIL service:", email);
+  console.log("ID_EMPRESA:", id_empresa);
+  console.log("TYPE:", typeof id_empresa);
+
   if (!user) {
     throw new AppError("User not found", 404, "USER_NOT_FOUND", true);
   }

@@ -55,6 +55,11 @@ export async function findUserByEmail(email, id_empresa) {
     return rows[0]; // Retorna o primeiro (ou undefined)
   } catch (error) {
     //console.error('Erro original no DB:', error);
+    console.error(" MYSQL ERROR findUserByEmail:");
+    console.error("Email:", email);
+    console.error("Empresa:", id_empresa);
+    console.error(error); 
+
     throw new AppError(
       'Error fetching user by email.',
       500,
