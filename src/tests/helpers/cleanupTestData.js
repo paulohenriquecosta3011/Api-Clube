@@ -2,18 +2,17 @@ import db from '../../db/db.js';
 
 export async function cleanupTestData({ cpf, userId, adminId } = {}) {
 
-  if (cpf) {
-    await db.query(
-      'DELETE FROM convites WHERE cpf_convidado = ?',
-      [cpf]
-    );
+  
+  await db.query('DELETE FROM convites_downloads');
 
-    await db.query(
-      'DELETE FROM convidados WHERE cpf = ?',
-      [cpf]
-    );
+  
+  await db.query('DELETE FROM convites');
+
+  if (cpf) {
+    await db.query('DELETE FROM convidados WHERE cpf = ?', [cpf]);
   }
 
+  
   if (userId || adminId) {
 
     const ids = [];
@@ -34,5 +33,4 @@ export async function cleanupTestData({ cpf, userId, adminId } = {}) {
       params
     );
   }
-
 }
