@@ -59,7 +59,8 @@ export async function login(req, res,next) {
     
   try {
     const { email, password, id_empresa } = req.body;
-    console.log("LOGIN BODY:", req.body);
+
+    console.log("LOGIN  BODY:", req.body);
     console.log("EMAIL:", email);
     console.log("ID_EMPRESA:", id_empresa);
     console.log("TYPE ID_EMPRESA:", typeof id_empresa);     
