@@ -19,18 +19,29 @@ This project demonstrates clean architecture, business rule implementation, and 
 
 ---
 
-## 🚀 Technologies
+## 🚀 Tech Stack
 
+**Backend:**
 - Node.js
 - Express
-- MySQL
-- Jest + Supertest (Integration Tests)
-- dotenv
-- bcrypt
-- jsonwebtoken
-- multer
-- Swagger (OpenAPI 3.0)
 
+**Database:**
+- MySQL
+
+**Authentication & Security:**
+- JWT (jsonwebtoken)
+- bcrypt
+- dotenv
+
+**Testing:**
+- Jest
+- Supertest (integration tests)
+
+**File handling:**
+- multer
+
+**Documentation:**
+- Swagger (OpenAPI 3.0)
 ---
 
 ## 📁 Project Structure
@@ -94,35 +105,42 @@ http://localhost:3001/api-docs
 🔗 API Endpoints
 Users
 
-POST /users/register → Create a new user
-POST /users/login → User login
-POST /users/generate-code → Generate a temporary code
-POST /users/validate-code → Validate a temporary code
-POST /users/setPassword → Set a new password
+## 🔗 API Endpoints
 
-Invitations
+### 👤 Users
+- POST /users/register → Create a new user
+- POST /users/login → User authentication
+- POST /users/generate-code → Generate temporary code
+- POST /users/validate-code → Validate temporary code
+- POST /users/setPassword → Set user password
 
-POST /convites/register → Register a new invitation
-POST /convites/download → Download invitations
-GET /convites/meus → List user invitations
+---
 
-Guests
+### 🎟️ Invitations
+- POST /convites/register → Register a new invitation
+- POST /convites/download → Download invitations
+- GET /convites/meus → List user invitations
 
-POST /convidados/registerConvidado → Register a new guest
+---
 
-Machines
+### 👥 Guests
+- POST /convidados/registerConvidado → Register a new guest
 
-POST /maquinas/novo-token → Create a new machine token
+---
 
-🧠 Architecture
+### 🖥️ Machines
+- POST /maquinas/novo-token → Create a new machine token
 
-This project follows a clean layered architecture:
+## 🧠 Architecture
 
-Controller → Handles HTTP requests and responses
-Service → Business logic and rules
-Repository → Database access and queries
+This project follows a clean layered architecture designed for scalability and maintainability.
 
-This separation improves maintainability, scalability, and testability.
+- **Controller** → Handles HTTP requests and responses
+- **Service** → Contains business logic and application rules
+- **Repository** → Responsible for database access and queries
+- **Middlewares** → Handles authentication, validation, and error handling
+
+This separation of concerns improves testability, code organization, and long-term scalability.
 
 🧪 Testing
 Integration tests built with Jest and Supertest
@@ -139,11 +157,20 @@ Swagger documentation
 Password hashing with bcrypt
 JWT authentication
 Environment variables for sensitive data
-👨‍💻 Notes for Recruiters
-15+ years of experience building business systems (Delphi)
-Currently transitioning to Node.js backend development
-Strong experience with real-world business rules
-Focus on clean architecture and scalability
+
+## 👨‍💻 Notes for Recruiters
+
+Strong background in Delphi-based enterprise systems with 1.5+ years of hands-on experience building Node.js backend APIs.
+
+This project demonstrates:
+- Real-world backend architecture
+- Authentication and authorization (JWT)
+- Integration testing with Jest and Supertest
+- External service integration (e.g. email services)
+- Production-style API structure
+
+Focused on writing clean, scalable, and maintainable backend systems.
+
 📦 Future Improvements
 CI/CD pipeline (GitHub Actions)
 Automated deployment
