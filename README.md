@@ -1,16 +1,13 @@
-# Club Management API
+# Club Management API (Node.js | Express | MySQL | JWT | Jest)
 
-Production-ready REST API for managing users, invitations, and guest access in a club environment.
+Backend REST API for managing users, invitations, and guest access in a club system.
 
-Built with Node.js and Express, following a clean layered architecture (Controller → Service → Middleware → Repository).
-
-This API simulates a real-world business scenario and can be consumed by any client application or frontend.
-
+Built with Node.js and Express using clean architecture principles, authentication, and automated testing.
 ---
 
 ## 💡 About the Project
 
-This API is a backend system designed to simulate a real-world club management scenario, where users can generate invitations and register guests.
+This API simulates a real-world club management system where users can generate invitations and manage guest access.
 
 It supports:
 - User authentication
