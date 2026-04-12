@@ -92,13 +92,13 @@ POST /users/register
   "password": "123456"
 }
 ```
-
 ## 📚 API Documentation
 
+Interactive Swagger documentation is available in production:
 
-Swagger documentation is available locally at:
+🔗 http://159.89.38.138:3001/api-docs
 
-http://localhost:3001/api-docs
+This documentation allows testing all endpoints directly from the browser.
 
 > 🚧 Production URL will be available soon (deployment in progress)
 
