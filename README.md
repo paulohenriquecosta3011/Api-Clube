@@ -44,6 +44,42 @@ This project demonstrates clean architecture, business rule implementation, and 
 - Swagger (OpenAPI 3.0)
 ---
 
+⚙️ Environment Configuration
+
+This project supports multiple environments to ensure safe and isolated execution across development, testing, and production.
+
+### 🧩 Environments
+
+- **development** → local development environment  
+- **test** → automated integration testing environment  
+- **production** → live API running on VPS  
+
+🧪 Testing Environment
+
+Integration tests are executed using a dedicated environment:
+
+NODE_ENV=test npx jest --runInBand
+
+This ensures:
+
+Test database is isolated from production data
+No risk of modifying real user data
+Reproducible test execution
+Safe integration testing workflow
+🗄️ Database Separation
+
+The application is designed to support separate databases per environment:
+
+### 🗄️ Database Separation
+
+| Environment   | Database Usage          |
+|---------------|------------------------|
+| development   | Local database         |
+| test          | Isolated test database |
+| production    | Live production database |
+
+The active environment is controlled through the NODE_ENV variable.
+
 ## 📁 Project Structure
 
 src/
@@ -102,8 +138,7 @@ This documentation allows testing all endpoints directly from the browser.
 
 > 🚧 Production URL will be available soon (deployment in progress)
 
-🔗 API Endpoints
-Users
+
 
 ## 🔗 API Endpoints
 
