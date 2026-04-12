@@ -8,11 +8,12 @@ import { createUser,
 import bcrypt from "bcrypt";
 
 import { AppError } from "../utils/AppError.js"; // importe sua classe de erro customizada
-import { sendValidationCodeEmail } from '../utils/sendEmail.js';
 import { generateToken } from "../utils/generateToken.js";
 import { verifyToken } from "../utils/verifyToken.js"; // certifique-se que o path está correto
 import generateVerificationCode from '../utils/generateVerificationCode.js';
-
+import { sendEmail } from './sendgrid.service.js';
+import { findEmpresaById } from '../repositories/empresas.repository.js';
+import { controlarLimiteEmail } from '../repositories/empresas.repository.js';
 
 //cadastro
 export async function registerUserService({ name, email, id_base, tipo_user,id_empresa }) {
@@ -102,7 +103,23 @@ export async function generateAndSendCodeService({email, id_empresa }){
   const resultado = await createCodigoValidacao(email, codigo, id_empresa);
 
     // Envia o código por e-mail
-    await sendValidationCodeEmail(email, codigo);
+    // NOVO (SendGrid)
+
+
+    const empresa = await findEmpresaById(id_empresa);
+
+    await controlarLimiteEmail(id_empresa);
+
+    await sendEmail({
+      to: email,
+      from: `${empresa.nome} <${process.env.EMAIL_FROM}>`,
+      subject: `Código de acesso - ${empresa.nome}`,
+      html: `
+        <h2>${empresa.nome}</h2>
+        <p>Seu código de acesso é:</p>
+        <h1>${codigo}</h1>
+      `,
+    });    
     
     return {
       message: "Verification code sent successfully!",
@@ -116,10 +133,10 @@ export async function generateAndSendCodeService({email, id_empresa }){
 
 export async function validateCodeService({ code, token }) {  
   const decoded = verifyToken(token);
+
   const email = decoded.email;
 
   const codigoBanco = await findCodigoByEmail(email,decoded.id_empresa);
-
   if (!codigoBanco) {
     throw new AppError(
       "Verification code not found for this email",
