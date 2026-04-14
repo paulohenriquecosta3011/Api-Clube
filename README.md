@@ -1,5 +1,11 @@
 # Club Management API (Node.js | Express | MySQL | JWT | Jest)
 
+🌐 Live API:
+http://159.89.38.138:3001
+
+📄 Swagger Documentation:
+http://159.89.38.138:3001/api-docs
+
 Backend REST API for managing users, invitations, and guest access in a club system.
 
 Built with Node.js and Express using clean architecture principles, authentication, and automated testing.
@@ -54,7 +60,7 @@ This project supports multiple environments to ensure safe and isolated executio
 - **test** → automated integration testing environment  
 - **production** → live API running on VPS  
 
-🧪 Testing Environment
+## 🧪 Testing
 
 Integration tests are executed using a dedicated environment:
 
@@ -130,14 +136,11 @@ POST /users/register
 ```
 ## 📚 API Documentation
 
-Interactive Swagger documentation is available in production:
+Interactive Swagger documentation is available:
 
 🔗 http://159.89.38.138:3001/api-docs
 
 This documentation allows testing all endpoints directly from the browser.
-
-> 🚧 Production URL will be available soon (deployment in progress)
-
 
 
 ## 🔗 API Endpoints
@@ -181,7 +184,9 @@ This separation of concerns improves testability, code organization, and long-te
 Integration tests built with Jest and Supertest
 Environment isolated using NODE_ENV=test
 External dependencies are mocked
-📌 Features
+
+## 📌 Features
+
 RESTful API
 JWT Authentication
 Centralized error handling
