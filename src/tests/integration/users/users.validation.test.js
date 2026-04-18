@@ -26,13 +26,13 @@ afterAll(async () => {
   await db.end();
 });
 
-describe('POST /api/users validation endpoints (mocked + helpers)', () => {
+describe('POST /api/v1/users/validate-code validation endpoints (mocked + helpers)', () => {
   
   it('should validate code successfully', async () => {
     jest.spyOn(usersService, 'validateCodeService').mockResolvedValue({ valid: true });
 
     const response = await request
-      .post('/api/users/validate-code')
+      .post('/api/v1/users/validate-code')
       .set('Authorization', `Bearer ${standardUser.token}`)
       .send({ code: '123456' });
 
@@ -43,14 +43,14 @@ describe('POST /api/users validation endpoints (mocked + helpers)', () => {
 
   it('should return 400 if token is missing', async () => {
     const response = await request
-      .post('/api/users/validate-code')
+      .post('/api/v1/users/validate-code')
       .send({ code: '123456' });
 
     expect(response.status).toBe(400);
     expect(response.body.message).toMatch(/Token and code are required/i);
   });
 
-  it('should set password successfully', async () => {
+  it('should /api/v1/users/set-password successfully', async () => {
     jest.spyOn(usersService, 'setPasswordService').mockResolvedValue({ updated: true });
     jest.spyOn(verifyTokenModule, 'verifyToken').mockReturnValue({
       userId: standardUser.id,
@@ -58,7 +58,7 @@ describe('POST /api/users validation endpoints (mocked + helpers)', () => {
     });
 
     const response = await request
-      .post('/api/users/setPassword')
+      .post('/api/v1/users/set-password')
       .set('Authorization', `Bearer ${standardUser.token}`)
       .send({
         code: '123456',

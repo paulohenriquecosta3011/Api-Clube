@@ -5,7 +5,7 @@ const baseOptions = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'ClubeUva API',
+      title: 'API FOR CLUB',
       version: '1.0.0',
       description: 'API for managing users, invitations, and guests.',
     },
@@ -29,8 +29,12 @@ export const swaggerDocs = (app) => {
       ...baseOptions.definition,
       servers: [
         {
-          url: process.env.BASE_URL || 'http://localhost:3001',
-          description: 'API server',
+          url: 'http://localhost:3001/api/v1',
+          description: 'Local (VMWare)',
+        },
+        {
+          url: process.env.VPS_URL || 'http://159.89.38.138:3001/api/v1',
+          description: 'Production (VPS)',
         },
       ],
     },

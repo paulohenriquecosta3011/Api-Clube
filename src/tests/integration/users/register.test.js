@@ -26,13 +26,13 @@ afterAll(async () => {
   await db.end();
 });
 
-describe('POST /api/users/register - single test', () => {
+describe('POST /api/v1/users/register - single test', () => {
   it('should allow admin to register a new standard user', async () => {
     // Limpa usuário com mesmo email antes do teste
     await db.query('DELETE FROM users WHERE email = ?', ['newuser@example.com']);
 
     const response = await request
-      .post('/api/users/register')
+      .post('/api/v1/users/register')
       .set('Authorization', `Bearer ${adminToken}`)
       .send({
         name: 'New User',
@@ -53,7 +53,7 @@ describe('POST /api/users/register - single test', () => {
 
   it('should not allow registration without an authentication token', async () => {
     const response = await request
-      .post('/api/users/register')
+      .post('/api/v1/users/register')
       .send({
         name: 'No Token User',
         email: 'notoken@example.com',
@@ -72,7 +72,7 @@ describe('POST /api/users/register - single test', () => {
     const standardUser = await createStandardUser({ email: 'standard@example.com', cleanBeforeInsert: true });
   
     const response = await request
-      .post('/api/users/register')
+      .post('/api/v1/users/register')
       .set('Authorization', `Bearer ${standardUser.token}`)
       .send({
         name: 'Another User',
@@ -91,7 +91,7 @@ describe('POST /api/users/register - single test', () => {
   }); 
   it('should not allow registration with invalid user type', async () => {
     const response = await request
-      .post('/api/users/register')
+      .post('/api/v1/users/register')
       .set('Authorization', `Bearer ${adminToken}`)
       .send({
         name: 'Invalid User',
@@ -111,7 +111,7 @@ describe('POST /api/users/register - single test', () => {
     const existingUser = await createStandardUser({ email: 'existing@example.com', cleanBeforeInsert: true });
   
     const response = await request
-      .post('/api/users/register')
+      .post('/api/v1/users/register')
       .set('Authorization', `Bearer ${adminToken}`)
       .send({
         name: 'Duplicate Email',

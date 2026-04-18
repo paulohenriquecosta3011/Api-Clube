@@ -22,10 +22,10 @@ afterAll(async () => {
   await db.end();
 });
 
-describe('POST /api/users/login', () => {
+describe('POST /api/v1/users/login', () => {
 
   it('should login admin successfully and return a JWT token', async () => {
-    const response = await request.post('/api/users/login').send({
+    const response = await request.post('/api/v1/users/login').send({
       email: adminUser.email,
       password: 'admin123',
       id_empresa: 1
@@ -38,7 +38,7 @@ describe('POST /api/users/login', () => {
   });
 
   it('should not login with incorrect password', async () => {
-    const response = await request.post('/api/users/login').send({
+    const response = await request.post('/api/v1/users/login').send({
       email: adminUser.email,
       password: 'wrongpassword',
       id_empresa: 1
@@ -49,7 +49,7 @@ describe('POST /api/users/login', () => {
   });
 
   it('should not login with a non-existent email', async () => {
-    const response = await request.post('/api/users/login').send({
+    const response = await request.post('/api/v1/users/login').send({
       email: 'nonexistent@example.com',
       password: 'anyPassword123',
       id_empresa: 1

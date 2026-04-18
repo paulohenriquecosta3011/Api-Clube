@@ -13,7 +13,7 @@ import { cleanupTestData } from '../../helpers/cleanupTestData.js';
 
 const request = supertest(app);
 
-describe('POST /api/convites/download - integration tests', () => {
+describe('POST /api/v1/invitations/download - integration tests', () => {
   let admin;
   let user;
   let convidadoCpf = '07966282899';
@@ -40,7 +40,7 @@ describe('POST /api/convites/download - integration tests', () => {
 
   it('should download invites successfully', async () => {
     const res = await request
-      .post('/api/convites/download')
+      .post('/api/v1/invitations/download')
       .set('token-maquina', global.machineToken)
       .send({ data: global.dataDownload });
 

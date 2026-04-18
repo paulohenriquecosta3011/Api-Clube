@@ -17,7 +17,7 @@ export async function createInvite(userToken, cpf, cleanBeforeInsert = false) {
   }
 
   const res = await request(app)
-    .post('/api/convites/register')
+    .post('/api/v1/invitations')
     .set('Authorization', `Bearer ${userToken}`)
     .send({
       cpf_convidado: cpf,

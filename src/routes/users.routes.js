@@ -23,7 +23,7 @@ const router = Router();
 
 /**
  * @swagger
- * /users/register:
+* /register:
  *   post:
  *     summary: Create a new user
  *     tags: [Users]
@@ -70,7 +70,7 @@ router.post(
 
 /**
  * @swagger
- * /api/users/login:
+ * /login:
  *   post:
  *     summary: User login
  *     tags: [Users]
@@ -109,7 +109,7 @@ router.post(
 
 /**
  * @swagger
- * /users/generate-code:
+ * /generate-code:
  *   post:
  *     summary: Generate a temporary code
  *     tags: [Users]
@@ -134,7 +134,7 @@ router.post("/generate-code", generateAndSendCode);
 
 /**
  * @swagger
- * /users/validate-code:
+ * /validate-code:
  *   post:
  *     summary: Validate a temporary code
  *     tags: [Users]
@@ -162,7 +162,7 @@ router.post("/validate-code", validateCode);
 
 /**
  * @swagger
- * /users/setPassword:
+ * /set-password:
  *   post:
  *     summary: Set a new password
  *     tags: [Users]
@@ -186,6 +186,6 @@ router.post("/validate-code", validateCode);
  *       400:
  *         description: Invalid data
  */
-router.post("/setPassword", setPassword);
+router.post("/set-password", setPassword);
 
 export default router;

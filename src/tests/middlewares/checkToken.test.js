@@ -5,14 +5,19 @@ import { AppError } from '../../utils/AppError.js';
 // Mock do jwt.verify
 jest.mock('jsonwebtoken');
 
+let consoleErrorSpy;
+
 // Silenciar console.error durante os testes
 beforeAll(() => {
-  jest.spyOn(console, 'error').mockImplementation(() => {});
+  consoleErrorSpy = jest
+    .spyOn(console, 'error')
+    .mockImplementation(() => {});
 });
 
 afterAll(() => {
-  console.error.mockRestore();
+  consoleErrorSpy.mockRestore();
 });
+
 describe('Middleware checkToken', () => {
   let req;
   let res;

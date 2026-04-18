@@ -7,10 +7,12 @@ import maquinasRoutes from "./maquinas.routes.js";
 
 const router = Router();
 
-// Define que todas as rotas do users.routes.js vão responder a partir de /users
+
 router.use("/users", usersRoutes);
-router.use("/convidados", convidadosRoutes)
-router.use("/convites", convitesRoutes);
-router.use("/maquinas", maquinasRoutes);  
+router.use("/guests", convidadosRoutes);
+router.use("/invitations", convitesRoutes);
+router.use("/machines", maquinasRoutes);
+
+
 
 export default router;

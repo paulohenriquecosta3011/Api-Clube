@@ -1,7 +1,10 @@
 //sendgrid.service.js
 import sgMail from '@sendgrid/mail';
 
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+if (process.env.NODE_ENV !== 'test') {
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+}
 
 export async function sendEmail({ to, subject, html, from }) {
   try {

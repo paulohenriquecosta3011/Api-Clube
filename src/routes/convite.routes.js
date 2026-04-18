@@ -12,12 +12,13 @@ const router = Router();
  *   description: Invitation management
  */
 
+
 /**
  * @swagger
- * /convites/register:
+ * /invitations:
  *   post:
  *     summary: Register a new invitation (user)
- *     tags: [Convites]
+ *     tags: [Invitations]
  *     security:
  *       - bearerAuth: []  # checkToken required
  *     requestBody:
@@ -43,14 +44,14 @@ const router = Router();
  *       401:
  *         description: Unauthorized
  */
-router.post("/register", checkToken, RegisterConvite);
+router.post("/", checkToken, RegisterConvite);
 
 /**
  * @swagger
- * /convites/download:
+ * /download:
  *   post:
  *     summary: Download invitations (machine)
- *     tags: [Convites]
+ *     tags: [Invitations]
  *     security:
  *       - bearerAuth: []  # validarTokenMaquina required
  *     requestBody:
@@ -77,10 +78,10 @@ router.post("/download", validarTokenMaquina, DownloadConvites);
 
 /**
  * @swagger
- * /convites/meus:
+ * /mine:
  *   get:
  *     summary: List my invitations (user)
- *     tags: [Convites]
+ *     tags: [Invitations]
  *     security:
  *       - bearerAuth: []  # checkToken required
  *     responses:
@@ -89,6 +90,6 @@ router.post("/download", validarTokenMaquina, DownloadConvites);
  *       401:
  *         description: Unauthorized
  */
-router.get("/meus", checkToken, MeusConvites);
+router.get("/mine", checkToken, MeusConvites);
 
 export default router;

@@ -9,7 +9,7 @@ import { cleanupTestData } from '../../helpers/cleanupTestData.js';
 
 const request = supertest(app);
 
-describe('POST /api/convidados/registerConvidado - integration tests', () => {
+describe('POST /api/v1/guests - integration tests', () => {
   let adminUser;
   let adminToken;
   let convidadoCpf;
@@ -34,7 +34,7 @@ describe('POST /api/convidados/registerConvidado - integration tests', () => {
     const filePath = path.join(__dirname, '../../files/test-image.jpg');
 
     const res = await request
-      .post('/api/convidados/registerConvidado')
+      .post('/api/v1/guests')
       .set('Authorization', `Bearer ${adminToken}`)
       .field('nome', 'Test Guest')
       .field('cpf', convidadoCpf)
@@ -57,7 +57,7 @@ describe('POST /api/convidados/registerConvidado - integration tests', () => {
     const filePath = path.join(__dirname, '../../files/test-image.jpg');
 
     const res = await request
-      .post('/api/convidados/registerConvidado')
+      .post('/api/v1/guests')
       .field('nome', 'Guest Without Token')
       .field('cpf', '12345678901')
       .attach('foto', filePath);
@@ -70,7 +70,7 @@ describe('POST /api/convidados/registerConvidado - integration tests', () => {
     const filePath = path.join(__dirname, '../../files/test-image.jpg');
 
     const res = await request
-      .post('/api/convidados/registerConvidado')
+      .post('/api/v1/guests')
       .set('Authorization', `Bearer ${adminToken}`)
       .field('cpf', '98765432102')
       .attach('foto', filePath);
@@ -84,7 +84,7 @@ describe('POST /api/convidados/registerConvidado - integration tests', () => {
     const filePath = path.join(__dirname, '../../files/test-image.jpg');
 
     const res = await request
-      .post('/api/convidados/registerConvidado')
+      .post('/api/v1/guests')
       .set('Authorization', `Bearer ${adminToken}`)
       .field('nome', 'Guest Invalid CPF')
       .field('cpf', invalidCpf)
@@ -99,7 +99,7 @@ describe('POST /api/convidados/registerConvidado - integration tests', () => {
     const filePath = path.join(__dirname, '../../files/test-image.jpg');
 
     const res = await request
-      .post('/api/convidados/registerConvidado')
+      .post('/api/v1/guests')
       .set('Authorization', `Bearer ${adminToken}`)
       .field('nome', 'Duplicate Guest')
       .field('cpf', duplicateCpf)
@@ -111,7 +111,7 @@ describe('POST /api/convidados/registerConvidado - integration tests', () => {
 
   it('should return 400 if image is not provided', async () => {
     const res = await request
-      .post('/api/convidados/registerConvidado')
+      .post('/api/v1/guests')
       .set('Authorization', `Bearer ${adminToken}`)
       .field('nome', 'No Photo Guest')
       .field('cpf', '07966282899');

@@ -4,7 +4,7 @@ import app from '../../app.js';
 
 export async function createMachine(adminToken, { nome, descricao }) {
   const res = await request(app)
-    .post('/api/maquinas/novo-token')
+    .post('/api/v1/machines/token')
     .set('Authorization', `Bearer ${adminToken}`)
     .send({ nome, descricao });
 

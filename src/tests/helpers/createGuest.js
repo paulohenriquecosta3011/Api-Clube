@@ -18,7 +18,7 @@ export async function createGuest(userToken, cpf, cleanBeforeInsert = false) {
   const filePath = path.join(process.cwd(), 'src/tests/files/test-image.jpg');
 
   const res = await request(app)
-    .post('/api/convidados/registerConvidado')
+    .post('/api/v1/guests')
     .set('Authorization', `Bearer ${userToken}`)
     .field('nome', 'Guest Test')
     .field('cpf', cpf)

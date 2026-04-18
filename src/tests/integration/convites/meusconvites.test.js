@@ -10,7 +10,7 @@ import { createGuest } from '../../helpers/createGuest.js';
 import { createInvite } from '../../helpers/createInvite.js';
 import { cleanupTestData } from '../../helpers/cleanupTestData.js';
 
-describe('GET /api/convites/meus', () => {
+describe('GET /api/v1/invitations/mine', () => {
 
   let admin;
   let user;
@@ -51,7 +51,7 @@ describe('GET /api/convites/meus', () => {
   it('should return the logged user invites', async () => {
 
     const res = await request(app)
-      .get('/api/convites/meus')
+      .get('/api/v1/invitations/mine')
       .set('Authorization', `Bearer ${user.token}`);
 
     expect(res.status).toBe(200);

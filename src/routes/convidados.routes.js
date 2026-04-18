@@ -8,17 +8,10 @@ const router = Router();
 
 /**
  * @swagger
- * tags:
- *   name: Convidados
- *   description: Guest management
- */
-
-/**
- * @swagger
- * /convidados/registerConvidado:
+ * /register:
  *   post:
  *     summary: Register a new guest
- *     tags: [Convidados]
+ *     tags: [Guests]
  *     security:
  *       - bearerAuth: []  # checkToken required
  *     requestBody:
@@ -47,7 +40,7 @@ const router = Router();
  *       401:
  *         description: Unauthorized
  */
-router.post("/registerConvidado", 
+router.post("/", 
   checkToken,
   upload.single('foto'),
   validateRequiredFields(["nome", "cpf"]),

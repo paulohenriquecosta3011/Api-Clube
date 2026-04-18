@@ -7,39 +7,27 @@ const router = Router();
 
 /**
  * @swagger
- * tags:
- *   name: Maquinas
- *   description: Machine management
- */
-
-/**
- * @swagger
- * /maquinas/novo-token:
+ * /machines/token:
  *   post:
  *     summary: Create a new machine token
- *     tags: [Maquinas]
+ *     tags: [Machines]
  *     security:
- *       - bearerAuth: []  # checkToken required
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
  *         application/json:
  *           schema:
  *             type: object
+ *             required:
+ *               - nome
  *             properties:
  *               nome:
  *                 type: string
- *                 description: Machine name
- *             required:
- *               - nome
  *     responses:
  *       201:
  *         description: Machine token created successfully
- *       400:
- *         description: Invalid data
- *       401:
- *         description: Unauthorized
  */
-router.post('/novo-token', checkToken, authorizeAdmin, criarMaquina);
+router.post('/token', checkToken, authorizeAdmin, criarMaquina);
 
 export default router;

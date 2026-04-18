@@ -9,7 +9,7 @@ import { cleanupTestData } from '../../helpers/cleanupTestData.js';
 const convidadoCpf = '07966282899';
 const requestApp = request(app);
 
-describe('POST /api/convites/register', () => {
+describe('POST /api/v1/invitations', () => {
   let admin, user;
 
   beforeAll(async () => {
@@ -29,7 +29,7 @@ describe('POST /api/convites/register', () => {
 
   it('should register a new invite successfully', async () => {
     const res = await requestApp
-      .post('/api/convites/register')
+      .post('/api/v1/invitations')
       .set('Authorization', `Bearer ${user.token}`)
       .send({
         cpf_convidado: convidadoCpf,
@@ -44,7 +44,7 @@ describe('POST /api/convites/register', () => {
 
   it('should return 401 if authentication token is missing', async () => {
     const res = await requestApp
-      .post('/api/convites/register')
+      .post('/api/v1/invitations')
       .send({
         cpf_convidado: convidadoCpf,
         dataconvite: '2026-03-01'
@@ -56,7 +56,7 @@ describe('POST /api/convites/register', () => {
 
   it('should return 404 if guest does not exist', async () => {
     const res = await requestApp
-      .post('/api/convites/register')
+      .post('/api/v1/invitations')
       .set('Authorization', `Bearer ${user.token}`)
       .send({
         cpf_convidado: '99999999999',
@@ -67,11 +67,11 @@ describe('POST /api/convites/register', () => {
   });
 
   it('should return 409 if invite for same CPF and date exists', async () => {
-    await requestApp.post('/api/convites/register')
+    await requestApp.post('/api/v1/invitations')
       .set('Authorization', `Bearer ${user.token}`)
       .send({ cpf_convidado: convidadoCpf, dataconvite: '2026-03-01' });
 
-    const res = await requestApp.post('/api/convites/register')
+    const res = await requestApp.post('/api/v1/invitations')
       .set('Authorization', `Bearer ${user.token}`)
       .send({ cpf_convidado: convidadoCpf, dataconvite: '2026-03-01' });
 

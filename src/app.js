@@ -14,8 +14,8 @@ app.use(express.json());
 swaggerDocs(app);
 
 // Prefixo /api para todas as rotas
-app.use('/api', routes);
-
+//app.use('/api', routes);
+app.use('/api/v1', routes);
 // Middleware de tratamento de erros
 app.use(errorHandler);
 
