@@ -23,26 +23,24 @@ const baseOptions = {
 };
 
 export const swaggerDocs = (app) => {
+  const isProd = process.env.NODE_ENV === 'production';
+
   const swaggerSpec = swaggerJSDoc({
     ...baseOptions,
     definition: {
       ...baseOptions.definition,
       servers: [
         {
-          url: 'http://localhost:3001/api/v1',
-          description: 'Local (VMWare)',
-        },
-        {
-          url: process.env.VPS_URL || 'http://159.89.38.138:3001/api/v1',
-          description: 'Production (VPS)',
+          url: isProd
+            ? 'http://159.89.38.138:3001/api/v1'
+            : 'http://localhost:3001/api/v1',
+          description: isProd ? 'Production (VPS)' : 'Local (VMWare)',
         },
       ],
     },
   });
 
-  console.log('BASE_URL:', process.env.BASE_URL);
-
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-  console.log('Swagger docs available at /api-docs');
+  console.log(`Swagger docs available at /api-docs`);
 };
