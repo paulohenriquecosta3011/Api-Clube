@@ -1,42 +1,30 @@
 # Club Management API (Node.js | Express | MySQL | JWT | Jest)
-
 🌐 Live API:
 http://159.89.38.138:3001
-
 📄 Swagger Documentation:
 http://159.89.38.138:3001/api-docs
+
 ## 🏛️ Club Management System – API Layer
 
 ### 🌍 Overview
-
 This is not a CRUD project — it is a **full operational system used to manage real club access, members, and guest entry control**.
-
 Real-world enterprise club management system used in production.
 
 It integrates multiple systems:
-
 - 🖥️ Legacy desktop system built in Delphi (core business system)
 - 🌐 Node.js REST API (integration layer)
 - 🚪 Portaria system (physical access control)
 - 📱 React.js frontend (PWA client for members)
-
-
 ---
-
 ## 🧠 Real Business Context
-
 The system is used in a private club environment where members can invite guests.
-
 When an invitation is created, it is validated and later consumed by the portaria system to allow or deny physical access at the entrance gate, including automated barrier control.
-
 ---
-
 ## 🏗️ System Architecture
 
 ### 🖥️ Delphi Desktop System (Core Internal System)
 
 Responsible for internal club operations:
-
 - Member registration (performed by club staff only)
 - Financial management (accounts payable & receivable)
 - Subscription control
@@ -44,17 +32,12 @@ Responsible for internal club operations:
 - Operational reports (entry/exit flow)
 
 👉 Important: Members are NOT self-registered. All members are created by the club secretary using the Delphi system.
-
 ---
-
 ### 🌐 Club API (Node.js – This Project)
 
 This API acts as the integration layer between systems.
 
-Main responsibilities:
-
 Main Responsibilities:
-
 - JWT-based user authentication and session management
 - Controlled first-access onboarding (temporary code + mandatory password creation)
 - Full invitation lifecycle management (create, track, and validate access requests)
@@ -62,46 +45,30 @@ Main Responsibilities:
 - Machine-to-machine authentication for portaria integration systems
 - Data synchronization between the Delphi legacy system and the Node.js API layer
 ---
-
 ### 🚪 Portaria System
-
 External system responsible for physical access control:
-
 - Consumes validated invitations from the API
 - Downloads access records
 - Validates guest entry at the gate
 - Can trigger automated barrier/cancela systems
-
 ---
-
 ### 📱 Frontend Client (React.js – PWA)
-
 A frontend application is being developed using React.js.
-
 The goal is to provide a modern and mobile-friendly interface for club members.
-
 Main features:
-
 - First access authentication using a temporary code
 - Password creation on first login (mandatory onboarding step)
 - Invitation creation and management
 - Viewing invitation history and status
-
 ### 📲 Mobile Experience (PWA)
-
 The frontend is being built as a **Progressive Web App (PWA)**, allowing it to be installed directly on mobile devices (Android and iOS), providing an app-like experience without requiring app store distribution.
-
 This ensures:
-
 - Installable on mobile home screen
 - Responsive mobile-first interface
 - Fast access to the backend API
 - Lightweight and efficient user experience
-
 ---
-
 ## 🔄 Real-World Flow
-
 1. A member is created by the club secretary inside the Delphi system
 2. The Delphi system synchronizes the member data with the backend API
 3. The member does NOT create their own account
@@ -112,60 +79,42 @@ This ensures:
 8. The portaria system consumes invitation data via API
 9. Guest access is validated at the entrance and physical entry is granted (including automated gate control)
 ---
-
 ## 🚀 Tech Stack
-
 **Backend:**
 - Node.js
 - Express
-
 **Database:**
 - MySQL
-
 **Authentication & Security:**
 - JWT (jsonwebtoken)
 - bcrypt
 - dotenv
-
 **Testing:**
 - Jest
 - Supertest (integration tests)
-
 **File handling:**
 - multer
-
 **Documentation:**
 - Swagger (OpenAPI 3.0)
 ---
-
 ⚙️ Environment Configuration
-
 This project supports multiple environments to ensure safe and isolated execution across development, testing, and production.
-
 ### 🧩 Environments
-
 - **development** → local development environment  
 - **test** → automated integration testing environment  
 - **production** → live API running on VPS  
-
 ## 🧪 Testing
-
 Integration tests are executed using a dedicated environment:
-
 NODE_ENV=test npx jest --runInBand
-
 This ensures:
-
 Test database is isolated from production data
 No risk of modifying real user data
 Reproducible test execution
 Safe integration testing workflow
 🗄️ Database Separation
-
 The application is designed to support separate databases per environment:
 
 ### 🗄️ Database Separation
-
 | Environment   | Database Usage          |
 |---------------|------------------------|
 | development   | Local database         |
@@ -175,7 +124,6 @@ The application is designed to support separate databases per environment:
 The active environment is controlled through the NODE_ENV variable.
 
 ## 📁 Project Structure
-
 src/
 ├─ controllers/   # Handle requests and call services  
 ├─ services/      # Business logic  
@@ -186,13 +134,9 @@ src/
 
 tests/  
 ├─ integration/   # API integration tests  
-
 ---
-
 ## ▶️ Running the Project
-
 Clone the repository:
-
 ```bash
 git clone https://github.com/paulohenriquecosta3011/Api-Clube.git
 cd Api-Clube
@@ -202,19 +146,13 @@ Run the API:
 ```bash
 npm start
 ```
-
-
 Run the integration tests:
 ```bash
-
 NODE_ENV=test npx jest --runInBand
 ```
-
 ## 📌 Example Request
-
 ### Create User
 POST /users/register
-
 ```json
 {
   "name": "John Doe",
@@ -223,80 +161,57 @@ POST /users/register
 }
 ```
 ## 📚 API Documentation
-
 Interactive Swagger documentation is available:
-
 🔗 http://159.89.38.138:3001/api-docs
-
 This documentation allows testing all endpoints directly from the browser.
-
-
 ## 🔗 API Endpoints
-
 ### 👤 Users
 - POST /users/register → Create a new user
 - POST /users/login → User authentication
 - POST /users/generate-code → Generate temporary code
 - POST /users/validate-code → Validate temporary code
 - POST /users/setPassword → Set user password
-
 ---
-
 ### 🎟️ Invitations
 - POST /convites/register → Register a new invitation
 - POST /convites/download → Download invitations
 - GET /convites/meus → List user invitations
-
 ---
-
 ### 👥 Guests
 - POST /convidados/registerConvidado → Register a new guest
-
 ---
-
 ### 🖥️ Machines
 - POST /maquinas/novo-token → Create a new machine token
-
 ## 🧠 Architecture
-
 This project follows a clean layered architecture designed for scalability and maintainability.
-
 - **Controller** → Handles HTTP requests and responses
 - **Service** → Contains business logic and application rules
 - **Repository** → Responsible for database access and queries
 - **Middlewares** → Handles authentication, validation, and error handling
-
 This separation of concerns improves testability, code organization, and long-term scalability.
-
 🧪 Testing
 Integration tests built with Jest and Supertest
 Environment isolated using NODE_ENV=test
 External dependencies are mocked
-
 ## 📌 Features
-
 RESTful API
 JWT Authentication
 Centralized error handling
 Environment-based configuration
 Swagger documentation
-
 🔒 Security
 Password hashing with bcrypt
 JWT authentication
 Environment variables for sensitive data
 
 ## 👨‍💻 Notes for Recruiters
-
 Strong background in Delphi-based enterprise systems with 1.5+ years of hands-on experience building Node.js backend APIs.
-
 This project demonstrates:
 - Real-world backend architecture
 - Authentication and authorization (JWT)
 - Integration testing with Jest and Supertest
 - External service integration (e.g. email services)
 - Production-style API structure
-
 Focused on writing clean, scalable, and maintainable backend systems.
 
 📦 Future Improvements
@@ -305,7 +220,7 @@ Automated deployment
 Rate limiting improvements
 Logging system (Winston / Pino)
 API versioning
-🧑‍💻 Author
 
+🧑‍💻 Author
 Developed by Paulo Henrique
 Backend Developer (Node.js / Delphi background)
