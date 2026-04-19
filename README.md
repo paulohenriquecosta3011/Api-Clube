@@ -53,13 +53,14 @@ This API acts as the integration layer between systems.
 
 Main responsibilities:
 
-- User authentication (JWT)
-- First access onboarding (password creation flow)
-- Invitation creation and management
-- Temporary code generation for first login
-- Machine/token authentication for portaria systems
-- Data synchronization between Delphi system and external services
+Main Responsibilities:
 
+- JWT-based user authentication and session management
+- Controlled first-access onboarding (temporary code + mandatory password creation)
+- Full invitation lifecycle management (create, track, and validate access requests)
+- Temporary code generation for secure first login flow
+- Machine-to-machine authentication for portaria integration systems
+- Data synchronization between the Delphi legacy system and the Node.js API layer
 ---
 
 ### 🚪 Portaria System
