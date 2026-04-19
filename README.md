@@ -9,6 +9,8 @@ http://159.89.38.138:3001/api-docs
 
 ### 🌍 Overview
 
+This is not a CRUD project — it is a **full operational system used to manage real club access, members, and guest entry control**.
+
 This project is part of a **real-world enterprise club management system used in production**.
 
 It integrates multiple systems:
@@ -18,7 +20,7 @@ It integrates multiple systems:
 - 🚪 Portaria system (physical access control)
 - 📱 React.js frontend (PWA client for members)
 
-This is not a CRUD project — it is a **full operational system used to manage real club access, members, and guest entry control**.
+
 ---
 
 ## 🧠 Real Business Context
