@@ -11,7 +11,7 @@ http://159.89.38.138:3001/api-docs
 
 This is not a CRUD project — it is a **full operational system used to manage real club access, members, and guest entry control**.
 
-This project is part of a **real-world enterprise club management system used in production**.
+Real-world enterprise club management system used in production.
 
 It integrates multiple systems:
 
@@ -279,8 +279,8 @@ RESTful API
 JWT Authentication
 Centralized error handling
 Environment-based configuration
-Integration tests
 Swagger documentation
+
 🔒 Security
 Password hashing with bcrypt
 JWT authentication
