@@ -5,21 +5,20 @@ http://159.89.38.138:3001
 
 📄 Swagger Documentation:
 http://159.89.38.138:3001/api-docs
-# 🏛️ Club Management System – API Layer
+## 🏛️ Club Management System – API Layer
 
-## 🌍 Overview
+### 🌍 Overview
 
-This project is part of a **real-world club management system used in production**.
+This project is part of a **real-world enterprise club management system used in production**.
 
-It is composed of multiple integrated systems:
+It integrates multiple systems:
 
-- A **legacy desktop system built in Delphi**
-- A **modern REST API built with Node.js**
-- A **portaria (gate/access control system)** responsible for physical entry validation
-- A **frontend client built with React.js (PWA)** for member interaction
+- 🖥️ Legacy desktop system built in Delphi (core business system)
+- 🌐 Node.js REST API (integration layer)
+- 🚪 Portaria system (physical access control)
+- 📱 React.js frontend (PWA client for members)
 
-The system manages the entire club operation, including member administration, financial control, invitation management, and automated physical access control.
-
+This is not a CRUD project — it is a **full operational system used to manage real club access, members, and guest entry control**.
 ---
 
 ## 🧠 Real Business Context
