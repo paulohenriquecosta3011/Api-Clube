@@ -124,11 +124,13 @@ This project supports multiple environments to ensure safe and isolated executio
 ## 🧪 Testing
 Integration tests are executed using a dedicated environment:
 NODE_ENV=test npx jest --runInBand
+
 This ensures:
 Test database is isolated from production data
 No risk of modifying real user data
 Reproducible test execution
 Safe integration testing workflow
+
 🗄️ Database Separation
 The application is designed to support separate databases per environment:
 
