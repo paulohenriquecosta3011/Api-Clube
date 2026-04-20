@@ -4,11 +4,8 @@ Production-ready backend system for real-world club access control, guest manage
 
 (Node.js | Express | MySQL | JWT | Jest)
 
-🌐 Live API:
-http://159.89.38.138:3001
-
-📄 Swagger Documentation:
-http://159.89.38.138:3001/api-docs
+🌐 Live API: http://159.89.38.138:3001
+📄 Swagger Documentation: http://159.89.38.138:3001/api-docs
 
 ## 🚀 Production Ready
 
@@ -21,7 +18,8 @@ http://159.89.38.138:3001/api-docs
 ## 🏛️ Club Management System – API Layer
 
 ## 🌍 Overview
-This is not a CRUD project — it is a **full operational system used to manage real club access, members, and guest entry control**.
+This is not a CRUD project — it is a full operational system used to manage real club access, members, and guest entry control.
+
 Real-world enterprise club management system used in production.
 It integrates multiple systems:
 - 🖥️ Legacy desktop system built in Delphi (core business system)
