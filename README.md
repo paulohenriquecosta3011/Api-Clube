@@ -1,4 +1,8 @@
-# Club Management API (Node.js | Express | MySQL | JWT | Jest)
+# Club Management API
+
+Production-ready backend system for real-world club access control, guest management, and system integration.
+
+(Node.js | Express | MySQL | JWT | Jest)
 
 🌐 Live API:
 http://159.89.38.138:3001
@@ -6,6 +10,14 @@ http://159.89.38.138:3001
 📄 Swagger Documentation:
 http://159.89.38.138:3001/api-docs
 
+## 🚀 Production Ready
+
+- Deployed on Linux VPS
+- Managed with PM2 (process manager)
+- Auto-restart on system reboot (systemd)
+- Environment-based configuration (.env)
+- Live API available for testing
+- 
 ## 🏛️ Club Management System – API Layer
 
 ### 🌍 Overview
