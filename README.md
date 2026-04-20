@@ -1,4 +1,4 @@
-# Club Management API
+### Club Management API
 
 Production-ready backend system for real-world club access control, guest management, and system integration.
 
@@ -10,7 +10,7 @@ http://159.89.38.138:3001
 📄 Swagger Documentation:
 http://159.89.38.138:3001/api-docs
 
-## 🚀 Production Ready
+### 🚀 Production Ready
 
 - Deployed on Linux VPS
 - Managed with PM2 (process manager)
@@ -18,7 +18,7 @@ http://159.89.38.138:3001/api-docs
 - Environment-based configuration (.env)
 - Live API available for testing
 - 
-## 🏛️ Club Management System – API Layer
+### 🏛️ Club Management System – API Layer
 
 ### 🌍 Overview
 This is not a CRUD project — it is a **full operational system used to manage real club access, members, and guest entry control**.
@@ -29,11 +29,11 @@ It integrates multiple systems:
 - 🚪 Portaria system (physical access control)
 - 📱 React.js frontend (PWA client for members)
 
-## 🧠 Real Business Context
+### 🧠 Real Business Context
 The system is used in a private club environment where members can invite guests.
 When an invitation is created, it is validated and later consumed by the portaria system to allow or deny physical access at the entrance gate, including automated barrier control.
 
-## 🏗️ System Architecture
+### 🏗️ System Architecture
 
 ### 🖥️ Delphi Desktop System (Core Internal System)
 
@@ -79,7 +79,7 @@ This ensures:
 - Fast access to the backend API
 - Lightweight and efficient user experience
 
-## 🔄 Real-World Flow
+### 🔄 Real-World Flow
 1. A member is created by the club secretary inside the Delphi system
 2. The Delphi system synchronizes the member data with the backend API
 3. The member does NOT create their own account
@@ -90,7 +90,7 @@ This ensures:
 8. The portaria system consumes invitation data via API
 9. Guest access is validated at the entrance and physical entry is granted (including automated gate control)
 
-## 🚀 Tech Stack
+### 🚀 Tech Stack
 **Backend:**
 - Node.js
 - Express
@@ -114,6 +114,7 @@ This ensures:
 - Swagger (OpenAPI 3.0)
 
 ⚙️ Environment Configuration
+
 This project supports multiple environments to ensure safe and isolated execution across development, testing, and production.
 
 ### 🧩 Environments
@@ -121,20 +122,19 @@ This project supports multiple environments to ensure safe and isolated executio
 - **test** → automated integration testing environment  
 - **production** → live API running on VPS  
 
-## 🧪 Testing
+### 🧪 Testing
 Integration tests are executed using a dedicated environment:
 NODE_ENV=test npx jest --runInBand
 
 This ensures:
-Test database is isolated from production data
-No risk of modifying real user data
-Reproducible test execution
-Safe integration testing workflow
-
-🗄️ Database Separation
-The application is designed to support separate databases per environment:
+- Test database is isolated from production data
+- No risk of modifying real user data
+- Reproducible test execution
+- Safe integration testing workflow
 
 ### 🗄️ Database Separation
+The application is designed to support separate databases per environment:
+
 | Environment   | Database Usage          |
 |---------------|------------------------|
 | development   | Local database         |
@@ -142,7 +142,7 @@ The application is designed to support separate databases per environment:
 | production    | Live production database |
 The active environment is controlled through the NODE_ENV variable.
 
-## 📁 Project Structure
+### 📁 Project Structure
 src/
 ├─ controllers/   # Handle requests and call services  
 ├─ services/      # Business logic  
@@ -154,7 +154,7 @@ src/
 tests/  
 ├─ integration/   # API integration tests  
 
-## ▶️ Running the Project
+### ▶️ Running the Project
 Clone the repository:
 ```bash
 git clone https://github.com/paulohenriquecosta3011/Api-Clube.git
@@ -169,7 +169,7 @@ Run the integration tests:
 ```bash
 NODE_ENV=test npx jest --runInBand
 ```
-## 📌 Example Request
+### 📌 Example Request
 
 ### Create User
 POST /users/register
@@ -181,12 +181,12 @@ POST /users/register
 }
 ```
 
-## 📚 API Documentation
+### 📚 API Documentation
 Interactive Swagger documentation is available:
 🔗 http://159.89.38.138:3001/api-docs
 This documentation allows testing all endpoints directly from the browser.
 
-## 🔗 API Endpoints
+### 🔗 API Endpoints
 
 ### 👤 Users
 - POST /users/register → Create a new user
@@ -206,7 +206,7 @@ This documentation allows testing all endpoints directly from the browser.
 ### 🖥️ Machines
 - POST /maquinas/novo-token → Create a new machine token
 
-## 🧠 Architecture
+### 🧠 Architecture
 This project follows a clean layered architecture designed for scalability and maintainability.
 - **Controller** → Handles HTTP requests and responses
 - **Service** → Contains business logic and application rules
@@ -214,12 +214,12 @@ This project follows a clean layered architecture designed for scalability and m
 - **Middlewares** → Handles authentication, validation, and error handling
 This separation of concerns improves testability, code organization, and long-term scalability.
 
-🧪 Testing
+### 🧪 Testing
 Integration tests built with Jest and Supertest
 Environment isolated using NODE_ENV=test
 External dependencies are mocked
 
-## 📌 Features
+### 📌 Features
 RESTful API
 JWT Authentication
 Centralized error handling
@@ -227,12 +227,12 @@ Environment-based configuration
 
 Swagger documentation
 
-🔒 Security
+### 🔒 Security
 Password hashing with bcrypt
 JWT authentication
 Environment variables for sensitive data
 
-## 👨‍💻 Notes for Recruiters
+### 👨‍💻 Notes for Recruiters
 Strong background in Delphi-based enterprise systems with 1.5+ years of hands-on experience building Node.js backend APIs.
 This project demonstrates:
 - Real-world backend architecture
@@ -242,13 +242,13 @@ This project demonstrates:
 - Production-style API structure
 Focused on writing clean, scalable, and maintainable backend systems.
 
-📦 Future Improvements
+### 📦 Future Improvements
 CI/CD pipeline (GitHub Actions)
 Automated deployment
 Rate limiting improvements
 Logging system (Winston / Pino)
 API versioning
 
-🧑‍💻 Author
+### 🧑‍💻 Author
 Developed by Paulo Henrique
 Backend Developer (Node.js / Delphi background)
