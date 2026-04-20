@@ -35,7 +35,7 @@ When an invitation is created, it is validated and later consumed by the portari
 
 ## 🏗️ System Architecture
 
-## 🖥️ Delphi Desktop System (Core Internal System)
+### 🖥️ Delphi Desktop System (Core Internal System)
 
 Responsible for internal club operations:
 - Member registration (performed by club staff only)
@@ -45,7 +45,7 @@ Responsible for internal club operations:
 - Operational reports (entry/exit flow)
 👉 Important: Members are NOT self-registered. All members are created by the club secretary using the Delphi system.
 
-## 🌐 Club API (Node.js – This Project)
+### 🌐 Club API (Node.js – This Project)
 This API acts as the integration layer between systems.
 Main Responsibilities:
 - JWT-based user authentication and session management
@@ -55,14 +55,14 @@ Main Responsibilities:
 - Machine-to-machine authentication for portaria integration systems
 - Data synchronization between the Delphi legacy system and the Node.js API layer
 
-## 🚪 Portaria System
+### 🚪 Portaria System
 External system responsible for physical access control:
 - Consumes validated invitations from the API
 - Downloads access records
 - Validates guest entry at the gate
 - Can trigger automated barrier/cancela systems
 
-## 📱 Frontend Client (React.js – PWA)
+### 📱 Frontend Client (React.js – PWA)
 A frontend application is being developed using React.js.
 The goal is to provide a modern and mobile-friendly interface for club members.
 Main features:
