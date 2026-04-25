@@ -11,6 +11,8 @@ import { extractTokenFromHeader } from "../utils/extractTokenFromHeader.js";
 import { verifyToken } from '../utils/verifyToken.js';
 //import generateVerificationCode from '../utils/generateVerificationCode.js';
 import { sendResponse } from '../utils/responseHandler.js';
+import { getEmpresasByEmailService } from "../services/users.service.js";
+
 
 // Cadastro de usuário
 export async function register(req, res,next) {
@@ -157,6 +159,29 @@ export async function setPassword(req, res, next) {
     const result = await setPasswordService({ email, password, id_empresa });
 
     return sendResponse(res, 200, "Password set successfully", result);
+
+  } catch (error) {
+    next(error);
+  }
+}
+export async function getEmpresasByEmail(req, res, next) {
+  try {
+    const { email } = req.body;
+
+    console.log('controller company');
+    console.log(email);
+
+    if (!email) {
+      return sendResponse(res, 400, "Email is required", {
+        companies: []
+      });
+    }
+
+    const companies = await getEmpresasByEmailService(email);
+
+    return sendResponse(res, 200, "Companies retrieved successfully", {
+      companies
+    });
 
   } catch (error) {
     next(error);

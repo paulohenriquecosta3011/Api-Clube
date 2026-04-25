@@ -15,6 +15,8 @@ import { sendEmail } from './sendgrid.service.js';
 import { findEmpresaById } from '../repositories/empresas.repository.js';
 import { controlarLimiteEmail } from '../repositories/empresas.repository.js';
 
+import { findEmpresasByEmail } from "../repositories/users.repository.js";
+
 //cadastro
 export async function registerUserService({ name, email, id_base, tipo_user,id_empresa }) {
      // Cria o usuário sem a senha 
@@ -91,10 +93,8 @@ export async function generateAndSendCodeService({email, id_empresa }){
     );
   }
  
-
-    
-  // Gerar o código (aqui você pode usar qualquer lógica que quiser)
-  //const codigo = Math.floor(100000 + Math.random() * 900000).toString(); // ex: 6 dígitos
+   
+  
   const codigo = generateVerificationCode();
 
   const tokenTemporario = generateToken({ email , id_empresa }, "15m");  
@@ -181,3 +181,20 @@ export async function setPasswordService({email,password,id_empresa}){
 
 }
 
+
+
+export async function getEmpresasByEmailService(email) {
+  
+  if (!email) {
+    throw new AppError(
+      "Email is required",
+      400,
+      "EMAIL_REQUIRED",
+      true
+    );
+  }
+
+  const companies = await findEmpresasByEmail(email);
+
+  return companies;
+}

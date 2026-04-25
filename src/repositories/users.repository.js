@@ -113,3 +113,18 @@ export async function updatePasswordRepository  (email, hashedPassword, id_empre
     );
   }
 }
+
+export async function findEmpresasByEmail(email) {
+  const [rows] = await pool.execute(
+    `
+    SELECT DISTINCT e.id_empresa, e.nome
+    FROM users u
+    JOIN empresas e ON e.id_empresa = u.id_empresa
+    WHERE u.email = ?
+    AND u.status = 'ATIVO'
+    `,
+    [email]
+  );
+
+  return rows;
+}

@@ -11,6 +11,7 @@ import {
   validatePassword
 } from "../middlewares/index.js";
 import loginRateLimiter from '../middlewares/loginRateLimiter.js';
+import { getEmpresasByEmail } from "../controllers/users.controller.js";
 
 const router = Router();
 
@@ -187,5 +188,7 @@ router.post("/validate-code", validateCode);
  *         description: Invalid data
  */
 router.post("/set-password", setPassword);
+
+router.post("/companies", getEmpresasByEmail);
 
 export default router;
