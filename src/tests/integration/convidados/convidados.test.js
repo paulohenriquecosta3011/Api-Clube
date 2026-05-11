@@ -6,6 +6,7 @@ import fs from 'fs';
 import db from '../../../../src/db/db.js';
 import { createAdminUser } from '../../helpers/createAdminUser.js';
 import { cleanupTestData } from '../../helpers/cleanupTestData.js';
+import { createInvite } from '../../helpers/createInvite.js';
 
 const request = supertest(app);
 
@@ -120,4 +121,40 @@ describe('POST /api/v1/guests - integration tests', () => {
     expect(res.body.message).toMatch(/image is required/i);
   });
 
+  it('should list guests linked to the authenticated user', async () => {
+
+    // cria convite associado ao usuário autenticado
+    await createInvite(adminToken, convidadoCpf, true);
+  
+    const res = await request
+      .get('/api/v1/guests/mine')
+      .set('Authorization', `Bearer ${adminToken}`);
+  
+    expect(res.status).toBe(200);
+  
+    expect(res.body.status).toBe('success');
+  
+    expect(res.body.message).toMatch(/Convidados do usuário/i);
+  
+    expect(res.body.data).toHaveProperty('convidados');
+  
+    expect(Array.isArray(res.body.data.convidados)).toBe(true);
+  
+    expect(res.body.data.convidados.length).toBeGreaterThan(0);
+  
+    const convidado = res.body.data.convidados.find(
+      guest => guest.cpf === convidadoCpf
+    );
+  
+    expect(convidado).toBeDefined();
+  
+    expect(convidado.nome).toBe('Test Guest');
+  
+    expect(convidado).toHaveProperty('foto');
+  
+    expect(convidado).toHaveProperty('status');
+  });
+
+
 });
+
