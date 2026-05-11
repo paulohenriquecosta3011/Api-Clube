@@ -2,6 +2,8 @@
 import { registerConvidado } from "../services/convidados.service.js";
 import { normalizarCPF, validarCPF } from '../utils/cpfUtils.js';
 import { AppError } from "../utils/AppError.js";
+import { listarConvidadosDoUsuarioService } from "../services/convidados.service.js";
+
 import { sendResponse } from '../utils/responseHandler.js';
 
 export async function Register(req, res, next) {
@@ -39,4 +41,16 @@ export async function Register(req, res, next) {
      //   console.error('Erro no register controller:', error); // Log para você investigar
         next(error); // Deixa o middleware centralizado cuidar da resposta    
       }
+}
+
+
+export async function ListarMeusConvidados(req, res, next) {
+  try {
+    const id_user = req.user.id; // vem do token
+    const convidados = await listarConvidadosDoUsuarioService(id_user);
+
+    return sendResponse(res, 200, "Convidados do usuário", { convidados });
+  } catch (error) {
+    next(error);
+  }
 }

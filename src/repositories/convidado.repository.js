@@ -44,3 +44,20 @@ export async function buscarPorCpf(cpf) {
 
   }
 }
+
+export async function listarConvidadosDoSocio(socioId) {
+  try {
+    const [rows] = await pool.execute(
+      `SELECT DISTINCT c.cpf, c.nome, c.foto, c.status
+          FROM convites v
+          INNER JOIN convidados c ON v.cpf_convidado = c.cpf
+          WHERE v.id_user = ?
+          ORDER BY c.nome ASC;
+          `,
+      [socioId]
+    );
+    return rows;
+  } catch (error) {
+    throw error;
+  }
+}

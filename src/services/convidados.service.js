@@ -1,5 +1,6 @@
 // convidados.service.js
 import { createConvidado, buscarPorCpf } from "../repositories/convidado.repository.js";
+import { listarConvidadosDoSocio } from "../repositories/convidado.repository.js";
 import { AppError } from "../utils/AppError.js";
 import fs from "fs";
 import path from "path";
@@ -42,6 +43,29 @@ export async function registerConvidado({ nome, cpf, foto }) {
       "Failed to register guest.",
       500,
       "REGISTER_GUEST_ERROR",
+      true
+    );
+  }
+}
+
+export async function listarConvidadosDoUsuarioService(id_user) {
+  if (!id_user) {
+    throw new AppError(
+      "User ID is required",
+      400,
+      "ID_USER_REQUIRED"
+    );
+  }
+
+  try {
+    const convidados = await listarConvidadosDoSocio(id_user);
+    return convidados;
+  } catch (error) {
+    console.error("Erro ao buscar convidados do usuário:", error);
+    throw new AppError(
+      "Failed to fetch user's guests.",
+      500,
+      "FETCH_USER_GUESTS_ERROR",
       true
     );
   }

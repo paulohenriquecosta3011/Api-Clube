@@ -1,6 +1,6 @@
 // convidados.routes.js
 import { Router } from "express";
-import { Register } from "../controllers/convidado.controller.js";
+import { Register, ListarMeusConvidados } from "../controllers/convidado.controller.js";
 import { validateRequiredFields, checkToken } from "../middlewares/index.js";
 import upload from "../middlewares/uploadMiddleware.js";
 
@@ -46,5 +46,7 @@ router.post("/",
   validateRequiredFields(["nome", "cpf"]),
   Register
 );
+
+router.get("/mine", checkToken, ListarMeusConvidados);
 
 export default router;
