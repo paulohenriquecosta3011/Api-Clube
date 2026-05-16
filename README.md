@@ -1,11 +1,19 @@
-# Club Management API
+# Accesses API v1
 
-Production-ready backend system for real-world club access control, guest management, and system integration.
-
-(Node.js | Express | MySQL | JWT | Jest)
+Production-ready backend system designed for real-world access control, guest management, invitation workflows, and physical gate integration.
+Built with Node.js, Express, MySQL, JWT authentication, Swagger/OpenAPI documentation, and automated integration testing using Jest.
 
 🌐 Live API: http://159.89.38.138:3001
 📄 Swagger Documentation: http://159.89.38.138:3001/api-docs
+
+## Quality & Testing
+
+- 71 automated tests passing
+- Integration testing with Jest + Supertest
+- Middleware validation tests
+- Authentication flow tests
+- Isolated test environment
+- Production-ready API architecture
 
 ## 🚀 Production Ready
 
@@ -18,7 +26,7 @@ Production-ready backend system for real-world club access control, guest manage
 ## 🏛️ Club Management System – API Layer
 
 ## 🌍 Overview
-This is not a CRUD project — it is a full operational system used to manage real club access, members, and guest entry control.
+This project was designed to solve real operational problems involving guest access control, invitation workflows, and physical gate integration.
 
 Real-world enterprise club management system used in production.
 It integrates multiple systems:
@@ -43,7 +51,7 @@ Responsible for internal club operations:
 - Operational reports (entry/exit flow)
 👉 Important: Members are NOT self-registered. All members are created by the club secretary using the Delphi system.
 
-### 🌐 Club API (Node.js – This Project)
+### 🌐 Accesses API (Node.js – This Project)
 This API acts as the integration layer between systems.
 Main Responsibilities:
 - JWT-based user authentication and session management
@@ -169,13 +177,12 @@ NODE_ENV=test npx jest --runInBand
 ```
 ## 📌 Example Request
 
-## Create User
-POST /users/register
+### Create User
+POST /api/v1/users/register
 ```json
 {
   "name": "John Doe",
-  "email": "john@email.com",
-  "password": "123456"
+  "email": "john@email.com"
 }
 ```
 
@@ -187,22 +194,24 @@ This documentation allows testing all endpoints directly from the browser.
 ## 🔗 API Endpoints
 
 ## 👤 Users
-- POST /users/register → Create a new user
-- POST /users/login → User authentication
-- POST /users/generate-code → Generate temporary code
-- POST /users/validate-code → Validate temporary code
-- POST /users/setPassword → Set user password
-
-## 🎟️ Invitations
-- POST /convites/register → Register a new invitation
-- POST /convites/download → Download invitations
-- GET /convites/meus → List user invitations
+POST /api/v1/users/login → Authenticate user and generate JWT token  
+POST /api/v1/users/register → Create a new user (admin only)  
+POST /api/v1/users/generate-code → Generate temporary access code for first login  
+POST /api/v1/users/validate-code → Validate temporary access code  
+POST /api/v1/users/set-password → Define user password during onboarding flow  
+POST /api/v1/users/companies → Retrieve companies associated with a user email  
 
 ## 👥 Guests
-- POST /convidados/registerConvidado → Register a new guest
+POST /api/v1/guests → Register a new guest  
+GET /api/v1/guests/mine → List guests associated with the authenticated user  
+
+## 🎟️ Invitations
+POST /api/v1/invitations → Create a new invitation for a guest  
+POST /api/v1/invitations/download → Download invitation data for portaria/access systems  
+GET /api/v1/invitations/mine → List invitations created by the authenticated user  
 
 ## 🖥️ Machines
-- POST /maquinas/novo-token → Create a new machine token
+POST /api/v1/machines/token → Generate authentication token for access control machines
 
 ## 🧠 Architecture
 This project follows a clean layered architecture designed for scalability and maintainability.
@@ -231,15 +240,20 @@ JWT authentication
 Environment variables for sensitive data
 
 ## 👨‍💻 Notes for Recruiters
-Strong background in Delphi-based enterprise systems with 1.5+ years of hands-on experience building Node.js backend APIs.
+Senior Delphi developer with 15+ years of experience building enterprise systems, including operational management platforms, financial systems, integrations, and real-world business applications.
+
+Over the last 1.5+ years, focused on modern backend development using Node.js, Express, REST APIs, JWT authentication, Swagger/OpenAPI documentation, and automated testing with Jest.
+
 This project demonstrates:
 - Real-world backend architecture
+- Layered architecture (Controller → Service → Repository)
 - Authentication and authorization (JWT)
 - Integration testing with Jest and Supertest
-- External service integration (e.g. email services)
+- Machine-to-machine communication
 - Production-style API structure
-Focused on writing clean, scalable, and maintainable backend systems.
+- Legacy system integration (Delphi ↔ Node.js)
 
+Focused on building scalable, maintainable, and production-oriented backend systems.
 ## 📦 Future Improvements
 CI/CD pipeline (GitHub Actions)
 Automated deployment
