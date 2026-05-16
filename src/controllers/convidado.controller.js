@@ -8,7 +8,7 @@ import { sendResponse } from '../utils/responseHandler.js';
 
 export async function Register(req, res, next) {
     try {
-        const {nome, cpf} = req.body     
+        const {nome, cpf, telefone } = req.body     
         const cpfLimpo = normalizarCPF(cpf);
     
         if (!validarCPF(cpfLimpo)) {
@@ -33,7 +33,7 @@ export async function Register(req, res, next) {
 
 
 
-        const novoConvidado =  await registerConvidado({nome, cpf: cpfLimpo, foto});
+        const novoConvidado =  await registerConvidado({nome, cpf: cpfLimpo, foto,telefone });
 
           return sendResponse(res, 201, 'Guest successfully registered', { convidado: novoConvidado });          
 

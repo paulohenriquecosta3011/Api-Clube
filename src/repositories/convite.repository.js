@@ -4,18 +4,19 @@ import { AppError } from '../utils/AppError.js';
 // ====================
 // Criação de convites
 // ====================
-export async function createConvite({ cpf_convidado, id_user, dataconvite }) {
+export async function createConvite({ cpf_convidado, id_user, dataconvite,token }) {
   try {
     const [result] = await pool.execute(
-      `INSERT INTO convites (cpf_convidado, id_user, dataconvite) VALUES (?, ?, ?)`,
-      [cpf_convidado, id_user, dataconvite]
+      `INSERT INTO convites (cpf_convidado, id_user, dataconvite, token) VALUES (?, ?, ?, ?)`,
+      [cpf_convidado, id_user, dataconvite,token]
     );
 
     return {
       id_convite: result.insertId,
       cpf_convidado,
       id_user,
-      dataconvite
+      dataconvite,
+      token
     };
 
   } catch (error) {
@@ -91,7 +92,7 @@ export async function buscarConvitesPorUsuario({ id_user, data_inicial }) {
 export async function buscarConvitesNaoBaixados({ id_maquina, id_user, data }) {
   try {
     let sql = `
-      SELECT c.id_convite, c.cpf_convidado, c.id_user, c.dataconvite, c.status
+      SELECT c.id_convite, c.cpf_convidado, c.id_user, c.dataconvite, c.status, c.token
       FROM convites c
       LEFT JOIN convites_downloads cd
         ON c.id_convite = cd.id_convite AND cd.id_maquina = ?
@@ -156,5 +157,30 @@ export async function buscarConvitePorCpfEData(cpf_convidado, dataconvite) {
       500,
       'CHECK_DUPLICATE_INVITE_ERROR'
     );
+  }
+}
+
+
+export async function buscarConvitePorToken(token) {
+
+  try {
+
+    const [rows] = await pool.execute(
+      `SELECT id_convite FROM convites WHERE token = ? LIMIT 1`,
+      [token]
+    );
+
+    return rows[0] || null;
+
+  } catch (error) {
+
+    console.error('Database error while fetching invite by token:', error);
+
+    throw new AppError(
+      'Failed to fetch invite by token.',
+      500,
+      'FETCH_INVITE_BY_TOKEN_ERROR'
+    );
+
   }
 }

@@ -13,7 +13,8 @@ const request = supertest(app);
 describe('POST /api/v1/guests - integration tests', () => {
   let adminUser;
   let adminToken;
-  let convidadoCpf;
+  let convidadoCpf;  
+  let convidadoTelefone;
 
   beforeAll(async () => {
     // Cria usuário admin com helper
@@ -32,6 +33,7 @@ describe('POST /api/v1/guests - integration tests', () => {
 
   it('should register a new guest successfully', async () => {
     convidadoCpf = '07966282899';
+    convidadoTelefone = '35991204660';
     const filePath = path.join(__dirname, '../../files/test-image.jpg');
 
     const res = await request
@@ -39,7 +41,8 @@ describe('POST /api/v1/guests - integration tests', () => {
       .set('Authorization', `Bearer ${adminToken}`)
       .field('nome', 'Test Guest')
       .field('cpf', convidadoCpf)
-      .attach('foto', filePath);
+      .attach('foto', filePath)
+      .field('telefone', convidadoTelefone);
 
     expect(res.status).toBe(201);
     expect(res.body.message).toMatch(/successfully registered/i);
@@ -48,6 +51,7 @@ describe('POST /api/v1/guests - integration tests', () => {
     const fotoSalva = res.body.data.convidado.foto;
     expect(typeof fotoSalva).toBe('string');
     expect(fotoSalva).toMatch(/\.(jpg|jpeg|png)$/i);
+    expect(res.body.data.convidado.telefone).toBe('35991204660');
 
     const savedPath = path.join('src/uploads', fotoSalva);
     const exists = fs.existsSync(savedPath);
@@ -141,7 +145,7 @@ describe('POST /api/v1/guests - integration tests', () => {
     expect(Array.isArray(res.body.data.convidados)).toBe(true);
   
     expect(res.body.data.convidados.length).toBeGreaterThan(0);
-  
+    
     const convidado = res.body.data.convidados.find(
       guest => guest.cpf === convidadoCpf
     );
@@ -153,6 +157,7 @@ describe('POST /api/v1/guests - integration tests', () => {
     expect(convidado).toHaveProperty('foto');
   
     expect(convidado).toHaveProperty('status');
+    expect(convidado.telefone).toBe(convidadoTelefone); 
   });
 
 

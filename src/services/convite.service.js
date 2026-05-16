@@ -5,71 +5,93 @@ import {
   createConvite,
   buscarConvitesNaoBaixados,
   registrarConviteBaixado,
-  buscarConvitesPorUsuario
+  buscarConvitesPorUsuario,
+  buscarConvitePorToken
 } from '../repositories/convite.repository.js';
 import { normalizarCPF } from '../utils/cpfUtils.js';
 import { validateRequiredFields } from '../middlewares/validateRequiredFields.js';
 import { buscarPorCpf } from '../repositories/convidado.repository.js';
 import { buscarConvitePorCpfEData } from '../repositories/convite.repository.js';
+import { generateInviteToken } from '../utils/generateInviteToken.js';
 
 // ====================
 // Service para registrar convites
 // ====================
 export async function registerConviteService({ cpf_convidado, id_user, dataconvite }) {
-
-  // Required fields (API standard)
-  validateRequiredFields(
-    { cpf_convidado, dataconvite },
-    ['cpf_convidado', 'dataconvite']
-  );
- 
-  // Safety check (should always exist from token)
-  if (!id_user) {
-    throw new AppError(
-      'User ID is required',
-      400,
-      'ID_USER_REQUIRED'
+    // Required fields (API standard)
+    validateRequiredFields(
+      { cpf_convidado, dataconvite },
+      ['cpf_convidado', 'dataconvite']
     );
-  }
-
-  // Date validation
-  if (isNaN(Date.parse(dataconvite))) {
-    throw new AppError(
-      'Invalid invite date',
-      400,
-      'INVALID_INVITE_DATE'
-    );
-  }
-
-  const cpfLimpo = normalizarCPF(cpf_convidado);
-
   
-  // Verifica se o convidado existe
-  const convidado = await buscarPorCpf(cpfLimpo);
-  if (!convidado) {
-    throw new AppError(
-      'Guest not found.',
-      404,
-      'GUEST_NOT_FOUND'
-    );
-  }
+    // Safety check (should always exist from token)
+    if (!id_user) {
+      throw new AppError(
+        'User ID is required',
+        400,
+        'ID_USER_REQUIRED'
+      );
+    }
 
-// Verifica se já existe convite para o mesmo CPF na mesma data
-const conviteExistente = await buscarConvitePorCpfEData(cpfLimpo, dataconvite);
-if (conviteExistente) {
-  throw new AppError(
-    'An invite for this CPF and date already exists.',
-    409,
-    'INVITE_ALREADY_EXISTS'
-  );
-}
-  const conviteCriado = await createConvite({
-    cpf_convidado: cpfLimpo,
-    id_user,
-    dataconvite
-  });
+    // Date validation
+    if (isNaN(Date.parse(dataconvite))) {
+      throw new AppError(
+        'Invalid invite date',
+        400,
+        'INVALID_INVITE_DATE'
+      );
+    }
 
-  return conviteCriado;
+    const cpfLimpo = normalizarCPF(cpf_convidado);
+
+    
+    // Verifica se o convidado existe
+    const convidado = await buscarPorCpf(cpfLimpo);
+    if (!convidado) {
+      throw new AppError(
+        'Guest not found.',
+        404,
+        'GUEST_NOT_FOUND'
+      );
+    }
+
+    // Verifica se já existe convite para o mesmo CPF na mesma data
+    const conviteExistente = await buscarConvitePorCpfEData(cpfLimpo, dataconvite);
+    if (conviteExistente) {
+      throw new AppError(
+        'An invite for this CPF and date already exists.',
+        409,
+        'INVITE_ALREADY_EXISTS'
+      );
+    }
+
+    // ====================
+    // Gera token único
+    // ====================
+
+    let token;
+    let tokenExiste = true;
+
+    while (tokenExiste) {
+
+      token = generateInviteToken(16);
+
+      const conviteComMesmoToken = await buscarConvitePorToken(token);
+
+      if (!conviteComMesmoToken) {
+        tokenExiste = false;
+      }
+
+    }
+
+    const conviteCriado = await createConvite({
+      cpf_convidado: cpfLimpo,
+      id_user,
+      dataconvite,
+      token
+    });
+
+    return conviteCriado;
 }
 
 

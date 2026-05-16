@@ -5,10 +5,12 @@ const baseOptions = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'API FOR CLUB',
+      title: 'ACCESS API',
       version: '1.0.0',
-      description: 'API for managing users, invitations, and guests.',
+      description:
+        'REST API for access control, guest management, invitations, QRCode validation and gate synchronization.',
     },
+
     components: {
       securitySchemes: {
         bearerAuth: {
@@ -18,7 +20,14 @@ const baseOptions = {
         },
       },
     },
+
+    security: [
+      {
+        bearerAuth: [],
+      },
+    ],
   },
+
   apis: ['./src/routes/*.js'],
 };
 
@@ -27,20 +36,29 @@ export const swaggerDocs = (app) => {
 
   const swaggerSpec = swaggerJSDoc({
     ...baseOptions,
+
     definition: {
       ...baseOptions.definition,
+
       servers: [
         {
           url: isProd
             ? 'http://159.89.38.138:3001/api/v1'
             : 'http://localhost:3001/api/v1',
-          description: isProd ? 'Production (VPS)' : 'Local (VMWare)',
+
+          description: isProd
+            ? 'Production Server (VPS)'
+            : 'Development Server (Local)',
         },
       ],
     },
   });
 
-  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+  app.use(
+    '/api-docs',
+    swaggerUi.serve,
+    swaggerUi.setup(swaggerSpec)
+  );
 
-  console.log(`Swagger docs available at /api-docs`);
+  console.log('Swagger docs available at /api-docs');
 };

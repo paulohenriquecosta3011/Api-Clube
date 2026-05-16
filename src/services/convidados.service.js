@@ -5,7 +5,7 @@ import { AppError } from "../utils/AppError.js";
 import fs from "fs";
 import path from "path";
 
-export async function registerConvidado({ nome, cpf, foto }) {
+export async function registerConvidado({ nome, cpf, foto, telefone }) {
   // Normaliza o CPF
   const cpfLimpo = cpf.replace(/\D/g, '');
 
@@ -31,7 +31,8 @@ export async function registerConvidado({ nome, cpf, foto }) {
     const novoConvidado = await createConvidado({
       nome,
       cpf: cpfLimpo,
-      foto
+      foto,
+      telefone
     });
 
     return novoConvidado;
