@@ -32,7 +32,7 @@ export async function buscarPorCpf(cpf) {
   try {
 
     const [rows] = await pool.execute(
-      "SELECT cpf FROM convidados WHERE cpf = ?",
+      "SELECT cpf, nome, telefone, foto FROM convidados WHERE cpf = ?",
       [cpf]
     );
 

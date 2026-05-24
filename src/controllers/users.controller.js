@@ -187,3 +187,38 @@ export async function getEmpresasByEmail(req, res, next) {
     next(error);
   }
 }
+
+
+
+export async function forgotPassword(req, res, next) {
+  try {
+
+    const { email, id_empresa } = req.body;
+
+    if (!email || !id_empresa) {
+      throw new AppError(
+        "Email and company identifier are required.",
+        400,
+        "VALIDATION_REQUIRED_FIELDS",
+        true
+      );
+    }
+
+    const result = await generateAndSendCodeService({
+      email,
+      id_empresa
+    });
+
+    return sendResponse(
+      res,
+      200,
+      "Recovery code sent successfully",
+      {
+        token: result.token
+      }
+    );
+
+  } catch (error) {
+    next(error);
+  }
+}

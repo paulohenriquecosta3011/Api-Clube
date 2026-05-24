@@ -4,27 +4,39 @@ import { listarConvidadosDoSocio } from "../repositories/convidado.repository.js
 import { AppError } from "../utils/AppError.js";
 import fs from "fs";
 import path from "path";
+import { registerConviteService } from "./convite.service.js";
 
-export async function registerConvidado({ nome, cpf, foto, telefone }) {
+export async function registerConvidado({ nome, cpf, foto, telefone, id_user }) {
   // Normaliza o CPF
   const cpfLimpo = cpf.replace(/\D/g, '');
 
   // Verifica se o CPF já existe
   const existingGuest = await buscarPorCpf(cpfLimpo);
+  if (!existingGuest && !foto) {
+      throw new AppError(
+        "image is required",
+        400,
+        "image is required"
+      );
+  }
   if (existingGuest) {
+
+    // remove foto enviada desnecessariamente
     if (foto) {
       const filePath = path.resolve("src", "uploads", foto);
-      fs.unlink(filePath, (err) => {
-       // if (err) console.error("Error removing file:", err);
-       // else console.log("File removed due to duplicate CPF:", foto);
-      });
+
+      fs.unlink(filePath, () => {});
     }
-    throw new AppError(
-      "Guest with this CPF already exists.",
-      409,
-      "GUEST_DUPLICATE",
-      true
-    );
+
+    // cria convite padrão para o sócio atual
+    await registerConviteService({
+      cpf_convidado: cpfLimpo,
+      id_user,
+      dataconvite: new Date().toISOString().split('T')[0],
+      ConvitePadrao: true
+    });
+
+    return existingGuest;
   }
 
   try {
@@ -34,6 +46,14 @@ export async function registerConvidado({ nome, cpf, foto, telefone }) {
       foto,
       telefone
     });
+    // cria convite padrão automaticamente
+    await registerConviteService({
+      cpf_convidado: cpfLimpo,
+      id_user,
+      dataconvite: new Date().toISOString().split('T')[0],
+      ConvitePadrao: true
+    });
+
 
     return novoConvidado;
 
@@ -70,4 +90,11 @@ export async function listarConvidadosDoUsuarioService(id_user) {
       true
     );
   }
+}
+
+
+export async function buscarConvidadoPorCpfService(cpf) {
+  const convidado = await buscarPorCpf(cpf);
+
+  return convidado;
 }

@@ -1,6 +1,6 @@
 // convite.routes.js
 import { Router } from "express";
-import { RegisterConvite, DownloadConvites, MeusConvites } from "../controllers/convite.controller.js";
+import { RegisterConvite, DownloadConvites, MeusConvites,BuscarConvitePublico } from "../controllers/convite.controller.js";
 import { checkToken, validarTokenMaquina } from "../middlewares/index.js";
 
 const router = Router();
@@ -282,4 +282,5 @@ router.post("/download", validarTokenMaquina, DownloadConvites);
  */
 router.get("/mine", checkToken, MeusConvites);
 
+router.get("/public/:token",  BuscarConvitePublico  );
 export default router;

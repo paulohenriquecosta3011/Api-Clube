@@ -1,7 +1,8 @@
 // users.routes.js
 
 import { Router } from "express";
-import { register, login, generateAndSendCode, validateCode, setPassword } from "../controllers/users.controller.js";
+import { register, login, generateAndSendCode, validateCode, setPassword,forgotPassword } from "../controllers/users.controller.js";
+
 import { 
   VerificarEmailExistente,
   checkToken,
@@ -449,5 +450,7 @@ router.post("/set-password", setPassword);
  *                 companies: []
  */
 router.post("/companies", getEmpresasByEmail);
+
+router.post("/forgot-password", forgotPassword);
 
 export default router;

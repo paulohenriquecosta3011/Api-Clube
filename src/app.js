@@ -4,11 +4,17 @@ import cors from "cors";
 import routes from "./routes/index.routes.js";
 import { errorHandler } from "./middlewares/errorHandler.middleware.js";
 import { swaggerDocs } from "./config/swagger.js"; // nome correto do arquivo
+import path from "path";
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+app.use(
+    "/uploads",
+    express.static(path.resolve("src", "uploads"))
+  );
 
 // Integra o Swagger antes das rotas
 swaggerDocs(app);

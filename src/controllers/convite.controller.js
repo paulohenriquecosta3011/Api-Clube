@@ -1,5 +1,13 @@
+//convite.controller.js
 import { sendResponse } from '../utils/responseHandler.js';
-import { registerConviteService, downloadConvitesService, buscarConvitesPorUsuarioService } from '../services/convite.service.js';
+import {
+  registerConviteService,
+  registerConvitesEmLoteService,
+  downloadConvitesService,
+  buscarConvitesPorUsuarioService,
+  buscarConvitePublicoService
+} from '../services/convite.service.js';
+
 import { AppError } from '../utils/AppError.js';
 
 // ====================
@@ -7,16 +15,59 @@ import { AppError } from '../utils/AppError.js';
 // ====================
 export async function RegisterConvite(req, res) {
   try {
-    const { cpf_convidado, dataconvite } = req.body;
+    const {
+      cpf_convidado,
+      dataconvite,
+      data_inicial,
+      data_final
+    } = req.body;
+
     const { id: id_user } = req.user; // vem do token
 
-    const convite = await registerConviteService({
+  //
+  // CONVITE ÚNICO
+  //
+
+  if (dataconvite) {
+
+    const convite =
+      await registerConviteService({
+
+        cpf_convidado,
+        id_user,
+        dataconvite
+
+      });
+
+    return sendResponse(
+      res,
+      201,
+      'Invite registered successfully',
+      convite
+    );
+
+  }
+
+  //
+  // CONVITES EM LOTE
+  //
+
+  const convites =
+    await registerConvitesEmLoteService({
+
       cpf_convidado,
       id_user,
-      dataconvite
+      data_inicial,
+      data_final
+
     });
 
-    return sendResponse(res, 201, 'Invite registered successfully', convite);
+return sendResponse(
+  res,
+  201,
+  'Invites registered successfully',
+  convites
+);
 
   } catch (error) {
     return sendResponse(
@@ -93,5 +144,36 @@ export async function MeusConvites(req, res) {
       error.message || 'Erro ao buscar convites',
       error.code || 'FETCH_MEUS_CONVITES_ERROR'
     );
+  }
+}
+
+export async function BuscarConvitePublico(req, res) {
+
+  try {
+
+    const { token } = req.params;
+
+    console.log("TOKEN RECEBIDO:");
+    console.log(req.params.token);
+
+    const convite =
+      await buscarConvitePublicoService(token);
+
+    return sendResponse(
+      res,
+      200,
+      'Invite found successfully',
+      convite
+    );
+
+  } catch (error) {
+
+    return sendResponse(
+      res,
+      error.statusCode || 500,
+      error.message || 'Erro ao buscar convite',
+      error.code || 'FETCH_PUBLIC_INVITE_ERROR'
+    );
+
   }
 }

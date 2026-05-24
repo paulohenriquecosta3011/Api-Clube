@@ -181,8 +181,6 @@ export async function setPasswordService({email,password,id_empresa}){
 
 }
 
-
-
 export async function getEmpresasByEmailService(email) {
   
   if (!email) {
@@ -198,3 +196,5 @@ export async function getEmpresasByEmailService(email) {
 
   return companies;
 }
+
+
