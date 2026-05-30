@@ -13,7 +13,7 @@ app.use(express.json());
 
 app.use(
     "/uploads",
-    express.static(path.resolve("src", "uploads"))
+    express.static(path.join(process.cwd(), "src", "uploads"))
   );
 
 // Integra o Swagger antes das rotas
