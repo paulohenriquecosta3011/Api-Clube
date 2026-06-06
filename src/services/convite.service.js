@@ -19,7 +19,7 @@ import {buscarConvitePublicoPorToken} from '../repositories/convite.repository.j
 // ====================
 // Service para registrar convites
 // ====================
-export async function registerConviteService({ cpf_convidado, id_user, dataconvite,ConvitePadrao }) {
+export async function registerConviteService({ cpf_convidado, id_user, dataconvite,data_final,ConvitePadrao }) {
     // Required fields (API standard)
     validateRequiredFields(
       { cpf_convidado, dataconvite },
@@ -35,12 +35,29 @@ export async function registerConviteService({ cpf_convidado, id_user, dataconvi
       );
     }
 
-    // Date validation
-    if (isNaN(Date.parse(dataconvite))) {
+    
+
+    if (!data_final) {
       throw new AppError(
-        'Invalid invite date',
+        'Final date is required',
         400,
-        'INVALID_INVITE_DATE'
+        'DATA_FINAL_REQUIRED'
+      );
+    }
+
+    if (isNaN(Date.parse(data_final))) {
+      throw new AppError(
+        'Invalid final date',
+        400,
+        'INVALID_FINAL_DATE'
+      );
+    }
+
+    if (new Date(dataconvite) > new Date(data_final)) {
+      throw new AppError(
+        'Initial date cannot be greater than final date',
+        400,
+        'INVALID_DATE_RANGE'
       );
     }
 
@@ -58,10 +75,17 @@ export async function registerConviteService({ cpf_convidado, id_user, dataconvi
     }
 
     // Verifica se já existe convite para o mesmo CPF na mesma data
-    const conviteExistente = await buscarConvitePorCpfEData(cpfLimpo, dataconvite, ConvitePadrao);
+    const conviteExistente =
+      await buscarConvitePorCpfEData(
+        cpfLimpo,
+        dataconvite,
+        data_final,
+        ConvitePadrao
+      );
+
     if (conviteExistente) {
       throw new AppError(
-        'An invite for this CPF and date already exists.',
+        'Already exists an invite overlapping this period.',
         409,
         'INVITE_ALREADY_EXISTS'
       );
@@ -89,6 +113,7 @@ export async function registerConviteService({ cpf_convidado, id_user, dataconvi
       cpf_convidado: cpfLimpo,
       id_user,
       dataconvite,
+      data_final,
       token,
       ConvitePadrao: false
     });
@@ -144,130 +169,6 @@ export async function buscarConvitesPorUsuarioService({ id_user, data_inicial })
   });
 }
 
-// ====================
-// Service para gerar convites em lote
-// ====================
-
-export async function registerConvitesEmLoteService({
-
-  cpf_convidado,
-  id_user,
-  data_inicial,
-  data_final
-
-}) {
-
-  // validações básicas
-
-  if (!data_inicial || !data_final) {
-
-    throw new AppError(
-      'Initial and final dates are required',
-      400,
-      'DATES_REQUIRED'
-    );
-
-  }
-
-  const [anoInicial, mesInicial, diaInicial] =
-  data_inicial.split('-');
-
-  const inicio =
-    new Date(
-      Number(anoInicial),
-      Number(mesInicial) - 1,
-      Number(diaInicial)
-    );
-
-  const [anoFinal, mesFinal, diaFinal] =
-    data_final.split('-');
-
-  const fim =
-    new Date(
-      Number(anoFinal),
-      Number(mesFinal) - 1,
-      Number(diaFinal)
-  );
-
-  // valida range
-
-  if (inicio > fim) {
-
-    throw new AppError(
-      'Initial date cannot be greater than final date',
-      400,
-      'INVALID_DATE_RANGE'
-    );
-
-  }
-
-  const convitesCriados = [];
-
-  const dataAtual =
-    new Date(inicio);
-
-  // loop das datas
-
-  while (dataAtual <= fim) {
-
-    const ano =
-    dataAtual.getFullYear();
-  
-  const mes =
-    String(
-      dataAtual.getMonth() + 1
-    ).padStart(2, '0');
-  
-  const dia =
-    String(
-      dataAtual.getDate()
-    ).padStart(2, '0');
-  
-  const dataFormatada =
-    `${ano}-${mes}-${dia}`;
-
-    try {
-
-      // reutiliza service atual
-      console.log('DATA FORMATADA:', dataFormatada);
-      const convite =
-        await registerConviteService({
-
-          cpf_convidado,
-          id_user,
-          dataconvite:
-            dataFormatada
-
-        });
-
-      convitesCriados.push(convite);
-
-    } catch (error) {
-
-      // ignora duplicados
-
-      if (
-        error.code !==
-        'INVITE_ALREADY_EXISTS'
-      ) {
-
-        throw error;
-
-      }
-
-    }
-
-    // próximo dia
-
-    dataAtual.setDate(
-      dataAtual.getDate() + 1
-    );
-
-  }
-
-  return convitesCriados;
-
-}
 
 export async function buscarConvitePublicoService(token) {
 

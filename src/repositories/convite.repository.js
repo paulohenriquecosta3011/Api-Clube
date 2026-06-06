@@ -4,11 +4,13 @@ import { AppError } from '../utils/AppError.js';
 // ====================
 // Criação de convites
 // ====================
-export async function createConvite({ cpf_convidado, id_user, dataconvite,token, ConvitePadrao = false }) {
+export async function createConvite({ cpf_convidado, id_user, dataconvite, data_final,token, ConvitePadrao = false }) {
   try {
     const [result] = await pool.execute(
-      `INSERT INTO convites (cpf_convidado, id_user, dataconvite, token, ConvitePadrao) VALUES (?, ?, ?, ?, ?)`,
-      [cpf_convidado, id_user, dataconvite,token,ConvitePadrao]
+      `INSERT INTO convites 
+       (cpf_convidado, id_user, dataconvite, data_final, token, ConvitePadrao) 
+       VALUES (?, ?, ?, ?, ?, ?)`,
+      [cpf_convidado, id_user, dataconvite, data_final, token, ConvitePadrao]
     );
 
     return {
@@ -16,6 +18,7 @@ export async function createConvite({ cpf_convidado, id_user, dataconvite,token,
       cpf_convidado,
       id_user,
       dataconvite,
+      data_final,
       token,
       ConvitePadrao
     };
@@ -54,6 +57,7 @@ export async function buscarConvitesPorUsuario({ id_user, data_inicial }) {
       g.foto AS foto_convidado,
 
       c.dataconvite,
+      c.data_Final,
       c.status,
       c.token,
 
@@ -152,26 +156,36 @@ throw new AppError(
   }
 }
 
-export async function buscarConvitePorCpfEData(cpf_convidado, dataconvite,ConvitePadrao = false) {
+export async function buscarConvitePorCpfEData(cpf_convidado, dataconvite, data_final,ConvitePadrao = false) {
   try {
     const [rows] = await pool.execute(
-      `SELECT id_convite 
-       FROM convites 
-       WHERE cpf_convidado = ? AND dataconvite = ?  AND ConvitePadrao = ?`,
-      [cpf_convidado, dataconvite, ConvitePadrao]
+      `
+      SELECT id_convite
+      FROM convites
+      WHERE cpf_convidado = ?
+         AND ConvitePadrao = ?
+         AND dataconvite <= ?
+         AND data_final >= ?
+      LIMIT 1
+      `,
+      [
+        cpf_convidado,
+        ConvitePadrao,
+        data_final,
+        dataconvite                  
+      ]
     );
 
     return rows[0] || null;
+
   } catch (error) {
-    console.error('Database error while checking duplicate invite:', error);
     throw new AppError(
-      'Failed to check duplicate invite.',
+      'Failed to check invite conflict.',
       500,
       'CHECK_DUPLICATE_INVITE_ERROR'
     );
   }
 }
-
 
 export async function buscarConvitePorToken(token) {
 
@@ -212,6 +226,7 @@ export async function buscarConvitePublicoPorToken(token) {
         g.nome,
         g.foto,
         g.telefone
+
 
       FROM convites c
 

@@ -33,6 +33,7 @@ export async function registerConvidado({ nome, cpf, foto, telefone, id_user }) 
       cpf_convidado: cpfLimpo,
       id_user,
       dataconvite: new Date().toISOString().split('T')[0],
+      data_final: new Date().toISOString().split('T')[0],
       ConvitePadrao: true
     });
 
@@ -51,6 +52,7 @@ export async function registerConvidado({ nome, cpf, foto, telefone, id_user }) 
       cpf_convidado: cpfLimpo,
       id_user,
       dataconvite: new Date().toISOString().split('T')[0],
+      data_final: new Date().toISOString().split('T')[0],      
       ConvitePadrao: true
     });
 

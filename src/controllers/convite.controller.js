@@ -2,7 +2,6 @@
 import { sendResponse } from '../utils/responseHandler.js';
 import {
   registerConviteService,
-  registerConvitesEmLoteService,
   downloadConvitesService,
   buscarConvitesPorUsuarioService,
   buscarConvitePublicoService
@@ -18,25 +17,19 @@ export async function RegisterConvite(req, res) {
     const {
       cpf_convidado,
       dataconvite,
-      data_inicial,
       data_final
     } = req.body;
 
     const { id: id_user } = req.user; // vem do token
 
-  //
-  // CONVITE ÚNICO
-  //
-
-  if (dataconvite) {
 
     const convite =
       await registerConviteService({
 
         cpf_convidado,
         id_user,
-        dataconvite
-
+        dataconvite,
+        data_final
       });
 
     return sendResponse(
@@ -46,28 +39,6 @@ export async function RegisterConvite(req, res) {
       convite
     );
 
-  }
-
-  //
-  // CONVITES EM LOTE
-  //
-
-  const convites =
-    await registerConvitesEmLoteService({
-
-      cpf_convidado,
-      id_user,
-      data_inicial,
-      data_final
-
-    });
-
-return sendResponse(
-  res,
-  201,
-  'Invites registered successfully',
-  convites
-);
 
   } catch (error) {
     return sendResponse(
