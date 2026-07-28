@@ -6,6 +6,7 @@ export async function createConvidado({ nome, cpf, foto, telefone }) {
 
   try {
 
+    
     const [result] = await pool.execute(
       "INSERT INTO convidados (nome, cpf, foto,telefone) VALUES (?, ?, ?, ?)",
       [nome, cpf, foto || null, telefone ||null ]

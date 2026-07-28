@@ -12,6 +12,7 @@ import db from '../../db/db.js';
  */
 export async function createGuest(userToken, cpf, cleanBeforeInsert = false) {
   if (cleanBeforeInsert) {
+    await db.query('DELETE FROM convites WHERE cpf_convidado = ?', [cpf]);
     await db.query('DELETE FROM convidados WHERE cpf = ?', [cpf]);
   }
 

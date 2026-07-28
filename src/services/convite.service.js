@@ -20,6 +20,8 @@ import {buscarConvitePublicoPorToken} from '../repositories/convite.repository.j
 // Service para registrar convites
 // ====================
 export async function registerConviteService({ cpf_convidado, id_user, dataconvite,data_final,ConvitePadrao }) {
+  //process.stdout.write(">>> ENTROU CONVITE SERVICE\n");
+  
     // Required fields (API standard)
     validateRequiredFields(
       { cpf_convidado, dataconvite },
@@ -45,6 +47,7 @@ export async function registerConviteService({ cpf_convidado, id_user, dataconvi
       );
     }
 
+    
     if (isNaN(Date.parse(data_final))) {
       throw new AppError(
         'Invalid final date',
@@ -73,7 +76,7 @@ export async function registerConviteService({ cpf_convidado, id_user, dataconvi
         'GUEST_NOT_FOUND'
       );
     }
-
+  
     // Verifica se já existe convite para o mesmo CPF na mesma data
     const conviteExistente =
       await buscarConvitePorCpfEData(
@@ -82,6 +85,10 @@ export async function registerConviteService({ cpf_convidado, id_user, dataconvi
         data_final,
         ConvitePadrao
       );
+      
+
+
+      //process.stdout.write(        ">>> RESULTADO BUSCA CONVITE: " +        JSON.stringify(conviteExistente) +        "\n"      );      
 
     if (conviteExistente) {
       throw new AppError(
@@ -115,7 +122,7 @@ export async function registerConviteService({ cpf_convidado, id_user, dataconvi
       dataconvite,
       data_final,
       token,
-      ConvitePadrao: false
+      ConvitePadrao
     });
 
     return conviteCriado;

@@ -4,6 +4,7 @@ import { AppError } from "../utils/AppError.js";
 export function validateRequiredFields(requiredFields) {
   
   return (req, res, next) => {
+    console.log("entrou aqui campos");
     const missingFields = requiredFields.filter(field => !req.body[field]);
 
     if (missingFields.length > 0) {

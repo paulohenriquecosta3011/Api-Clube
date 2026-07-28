@@ -9,9 +9,10 @@ import { sendResponse } from '../utils/responseHandler.js';
 
 export async function Register(req, res, next) {
     try {
+      console.error('CHEGOU NO CONTROLLER REGISTER');     
         const {nome, cpf, telefone } = req.body     
         const cpfLimpo = normalizarCPF(cpf);
-    
+        console.log('CONTROLLER CHEGOU');
         if (!validarCPF(cpfLimpo)) {
 
             throw new AppError(

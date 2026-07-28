@@ -8,8 +8,14 @@ import { registerConviteService } from "./convite.service.js";
 
 export async function registerConvidado({ nome, cpf, foto, telefone, id_user }) {
   // Normaliza o CPF
+  
   const cpfLimpo = cpf.replace(/\D/g, '');
-
+  console.log('[CONVIDADO SERVICE] START', {
+    nome,
+    cpf,
+    cpfLimpo,
+    id_user
+  });
   // Verifica se o CPF já existe
   const existingGuest = await buscarPorCpf(cpfLimpo);
   if (!existingGuest && !foto) {

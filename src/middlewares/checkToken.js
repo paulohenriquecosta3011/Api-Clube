@@ -4,6 +4,9 @@ import { AppError } from '../utils/AppError.js';
 
 function checkToken(req, res, next) {
   try {
+    console.log(' CHECKTOKEN ATIVOU');
+  console.log('AUTH HEADER:', req.headers.authorization);
+
     const authHeader = req.headers.authorization;
 
     if (!authHeader || !authHeader.startsWith('Bearer ')) {

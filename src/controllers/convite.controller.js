@@ -13,6 +13,9 @@ import { AppError } from '../utils/AppError.js';
 // Controller de registro de convites
 // ====================
 export async function RegisterConvite(req, res) {
+  //process.stdout.write(">>> CONTROLLER CONVITE\n");
+  //process.stdout.write(JSON.stringify(req.body) + "\n");
+
   try {
     const {
       cpf_convidado,

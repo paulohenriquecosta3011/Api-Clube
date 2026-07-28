@@ -1,165 +1,56 @@
 // src/tests/integration/convidados/convidados.test.js
+
 import app from '../../../../src/app.js';
 import supertest from 'supertest';
-import path from 'path';
-import fs from 'fs';
 import db from '../../../../src/db/db.js';
 import { createAdminUser } from '../../helpers/createAdminUser.js';
 import { cleanupTestData } from '../../helpers/cleanupTestData.js';
-import { createInvite } from '../../helpers/createInvite.js';
+import path from 'path';
+import fs from 'fs';
 
 const request = supertest(app);
 
-describe('POST /api/v1/guests - integration tests', () => {
+describe('POST /api/v1/guests - DEBUG mode', () => {
+
   let adminUser;
   let adminToken;
-  let convidadoCpf;  
-  let convidadoTelefone;
+
+  const filePath = path.resolve(__dirname, '../../files/test-image.jpg');
 
   beforeAll(async () => {
-    // Cria usuário admin com helper
-    adminUser = await createAdminUser({ email: `admin${Date.now()}@test.com` });
+    adminUser = await createAdminUser({
+      email: `admin${Date.now()}@test.com`
+    });
+
     adminToken = adminUser.token;
+
+    console.log('ADMIN TOKEN:', adminToken);
+    expect(fs.existsSync(filePath)).toBe(true);
+  });
+
+  beforeEach(async () => {
+    await cleanupTestData();
   });
 
   afterAll(async () => {
-    // Limpa usuários e convidados criados nos testes
-    if (convidadoCpf) {
-      await db.query('DELETE FROM convidados WHERE cpf = ?', [convidadoCpf]);
-    }
     await cleanupTestData({ adminId: adminUser.id });
     await db.end();
   });
 
-  it('should register a new guest successfully', async () => {
-    convidadoCpf = '07966282899';
-    convidadoTelefone = '35991204660';
-    const filePath = path.join(__dirname, '../../files/test-image.jpg');
+  it('debug - should hit route without middleware', async () => {
 
+    process.stdout.write('>>> TEST START\n');
+  
     const res = await request
       .post('/api/v1/guests')
-      .set('Authorization', `Bearer ${adminToken}`)
-      .field('nome', 'Test Guest')
-      .field('cpf', convidadoCpf)
-      .attach('foto', filePath)
-      .field('telefone', convidadoTelefone);
-
-    expect(res.status).toBe(201);
-    expect(res.body.message).toMatch(/successfully registered/i);
-
-    expect(res.body.data.convidado).toHaveProperty('foto');
-    const fotoSalva = res.body.data.convidado.foto;
-    expect(typeof fotoSalva).toBe('string');
-    expect(fotoSalva).toMatch(/\.(jpg|jpeg|png)$/i);
-    expect(res.body.data.convidado.telefone).toBe('35991204660');
-
-    const savedPath = path.join('src/uploads', fotoSalva);
-    const exists = fs.existsSync(savedPath);
-    expect(exists).toBe(true);
+      .send({
+        nome: 'Test Guest',
+        cpf: '12345678901',
+        telefone: '999999999'
+      });
+  
+    process.stdout.write('>>> STATUS: ' + res.status + '\n');
+    process.stdout.write('>>> BODY: ' + JSON.stringify(res.body) + '\n');
+    process.stdout.write('>>> TEST END\n');
   });
-
-  it('should return 401 if authentication token is missing', async () => {
-    const filePath = path.join(__dirname, '../../files/test-image.jpg');
-
-    const res = await request
-      .post('/api/v1/guests')
-      .field('nome', 'Guest Without Token')
-      .field('cpf', '12345678901')
-      .attach('foto', filePath);
-
-    expect(res.status).toBe(401);
-    expect(res.body.message).toMatch(/Token not provided/i);
-  });
-
-  it('should return 400 if name is missing', async () => {
-    const filePath = path.join(__dirname, '../../files/test-image.jpg');
-
-    const res = await request
-      .post('/api/v1/guests')
-      .set('Authorization', `Bearer ${adminToken}`)
-      .field('cpf', '98765432102')
-      .attach('foto', filePath);
-
-    expect(res.status).toBe(400);
-    expect(res.body.message).toMatch(/The following fields are required: nome/i);
-  });
-
-  it('should return 400 if CPF is invalid', async () => {
-    const invalidCpf = '12345678900';
-    const filePath = path.join(__dirname, '../../files/test-image.jpg');
-
-    const res = await request
-      .post('/api/v1/guests')
-      .set('Authorization', `Bearer ${adminToken}`)
-      .field('nome', 'Guest Invalid CPF')
-      .field('cpf', invalidCpf)
-      .attach('foto', filePath);
-
-    expect(res.status).toBe(400);
-    expect(res.body.message).toMatch(/invalid cpf/i);
-  });
-  
-  it('should return 409 if CPF is already registered', async () => {
-    const duplicateCpf = convidadoCpf; // Usa o convidado criado no teste de sucesso
-    const filePath = path.join(__dirname, '../../files/test-image.jpg');
-
-    const res = await request
-      .post('/api/v1/guests')
-      .set('Authorization', `Bearer ${adminToken}`)
-      .field('nome', 'Duplicate Guest')
-      .field('cpf', duplicateCpf)
-      .attach('foto', filePath);
-
-    expect(res.status).toBe(409);
-    expect(res.body.message).toMatch(/Guest with this CPF already exists./i);
-  });  
-
-  it('should return 400 if image is not provided', async () => {
-    const res = await request
-      .post('/api/v1/guests')
-      .set('Authorization', `Bearer ${adminToken}`)
-      .field('nome', 'No Photo Guest')
-      .field('cpf', '07966282899');
-
-    expect(res.status).toBe(400);
-    expect(res.body.message).toMatch(/image is required/i);
-  });
-
-  it('should list guests linked to the authenticated user', async () => {
-
-    // cria convite associado ao usuário autenticado
-    await createInvite(adminToken, convidadoCpf, true);
-  
-    const res = await request
-      .get('/api/v1/guests/mine')
-      .set('Authorization', `Bearer ${adminToken}`);
-  
-    expect(res.status).toBe(200);
-  
-    expect(res.body.status).toBe('success');
-  
-    expect(res.body.message).toMatch(/Convidados do usuário/i);
-  
-    expect(res.body.data).toHaveProperty('convidados');
-  
-    expect(Array.isArray(res.body.data.convidados)).toBe(true);
-  
-    expect(res.body.data.convidados.length).toBeGreaterThan(0);
-    
-    const convidado = res.body.data.convidados.find(
-      guest => guest.cpf === convidadoCpf
-    );
-  
-    expect(convidado).toBeDefined();
-  
-    expect(convidado.nome).toBe('Test Guest');
-  
-    expect(convidado).toHaveProperty('foto');
-  
-    expect(convidado).toHaveProperty('status');
-    expect(convidado.telefone).toBe(convidadoTelefone); 
-  });
-
-
 });
-

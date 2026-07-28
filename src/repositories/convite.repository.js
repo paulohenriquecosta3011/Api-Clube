@@ -26,7 +26,6 @@ export async function createConvite({ cpf_convidado, id_user, dataconvite, data_
   } catch (error) {
 
     console.error('Database error while creating invite:', error);
-
     if (error.code === 'ER_DUP_ENTRY') {
       throw new AppError(
         'An invite for this CPF and date already exists.',
@@ -156,23 +155,30 @@ throw new AppError(
   }
 }
 
-export async function buscarConvitePorCpfEData(cpf_convidado, dataconvite, data_final,ConvitePadrao = false) {
+
+
+export async function buscarConvitePorCpfEData(
+  cpf_convidado,
+  dataconvite,
+  data_final,
+  ConvitePadrao = false
+) {
   try {
     const [rows] = await pool.execute(
       `
       SELECT id_convite
       FROM convites
       WHERE cpf_convidado = ?
-         AND ConvitePadrao = ?
-         AND dataconvite <= ?
-         AND data_final >= ?
+        AND ConvitePadrao = ?
+        AND dataconvite <= ?
+        AND data_final >= ?
       LIMIT 1
       `,
       [
         cpf_convidado,
         ConvitePadrao,
         data_final,
-        dataconvite                  
+        dataconvite
       ]
     );
 

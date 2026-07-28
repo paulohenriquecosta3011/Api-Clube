@@ -1,3 +1,4 @@
+
 // convidados.routes.js
 import { Router } from "express";
 import { Register, ListarMeusConvidados,BuscarConvidadoPorCpf } from "../controllers/convidado.controller.js";
@@ -108,7 +109,7 @@ const router = Router();
  *               message: Guest with this CPF already exists.
  *               data: GUEST_DUPLICATE
  */
-router.post("/", 
+router.post("/",
   checkToken,
   upload.single('foto'),
   validateRequiredFields(["nome", "cpf"]),

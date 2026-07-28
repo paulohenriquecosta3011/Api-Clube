@@ -4,7 +4,10 @@ import dotenv from 'dotenv';
 
 // Se estiver rodando testes, usa .env.test; caso contrário, usa .env
 const envFile = process.env.NODE_ENV === 'test' ? '.env.test' : '.env';
+
+
 dotenv.config({ path: envFile });
+
 
 const pool = mysql.createPool({
   host: process.env.DB_HOST,

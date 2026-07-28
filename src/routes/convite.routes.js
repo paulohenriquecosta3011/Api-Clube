@@ -95,7 +95,10 @@ const router = Router();
  *               message: Erro ao cadastrar convite
  *               data: REGISTER_CONVITE_ERROR
  */
-router.post("/", checkToken, RegisterConvite);
+router.post("/", 
+    checkToken,
+    RegisterConvite
+  );
 
 /**
  * @swagger

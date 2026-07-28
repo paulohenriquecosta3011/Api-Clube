@@ -21,7 +21,8 @@ export async function createInvite(userToken, cpf, cleanBeforeInsert = false) {
     .set('Authorization', `Bearer ${userToken}`)
     .send({
       cpf_convidado: cpf,
-      dataconvite: dataConvite
+      dataconvite: dataConvite,
+      data_final: dataConvite
     });
 
   if (res.status !== 201) {

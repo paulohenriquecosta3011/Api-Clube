@@ -7,8 +7,8 @@ import maquinasRoutes from "./maquinas.routes.js";
 
 const router = Router();
 
-
 router.use("/users", usersRoutes);
+
 router.use("/guests", convidadosRoutes);
 router.use("/invitations", convitesRoutes);
 router.use("/machines", maquinasRoutes);

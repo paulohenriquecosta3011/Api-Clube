@@ -7,6 +7,8 @@ import { createGuest } from '../../helpers/createGuest.js';
 import { cleanupTestData } from '../../helpers/cleanupTestData.js';
 
 const convidadoCpf = '07966282899';
+const hoje = new Date().toISOString().split('T')[0];
+
 const requestApp = request(app);
 
 describe('POST /api/v1/invitations', () => {
@@ -27,13 +29,17 @@ describe('POST /api/v1/invitations', () => {
     await db.end();
   });
 
-  it('should register a new invite successfully', async () => {
+  it('should register a new invite successfully primeiro teste', async () => {
+
+    //process.stdout.write("chamando primeiro teste\n");
     const res = await requestApp
       .post('/api/v1/invitations')
       .set('Authorization', `Bearer ${user.token}`)
       .send({
         cpf_convidado: convidadoCpf,
-        dataconvite: '2026-03-01'
+        dataconvite: hoje,
+        data_final: hoje,
+        ConvitePadrao: false
       });
 
     expect(res.status).toBe(201);
@@ -47,9 +53,11 @@ describe('POST /api/v1/invitations', () => {
       .post('/api/v1/invitations')
       .send({
         cpf_convidado: convidadoCpf,
-        dataconvite: '2026-03-01'
+        dataconvite: hoje,
+        data_final: hoje,
+        ConvitePadrao: false
+  
       });
-
     expect(res.status).toBe(401);
     expect(res.body.message).toMatch(/Token not provided/i);
   });
@@ -60,22 +68,36 @@ describe('POST /api/v1/invitations', () => {
       .set('Authorization', `Bearer ${user.token}`)
       .send({
         cpf_convidado: '99999999999',
-        dataconvite: '2026-03-01'
+        dataconvite: hoje,
+        data_final: hoje,
+        ConvitePadrao: false
       });
-
     expect(res.status).toBe(404);
   });
 
   it('should return 409 if invite for same CPF and date exists', async () => {
     await requestApp.post('/api/v1/invitations')
       .set('Authorization', `Bearer ${user.token}`)
-      .send({ cpf_convidado: convidadoCpf, dataconvite: '2026-03-01' });
+      .send({
+           cpf_convidado: convidadoCpf, 
+           dataconvite: hoje,
+           data_final: hoje,
+           ConvitePadrao: false
+             
+          });
 
     const res = await requestApp.post('/api/v1/invitations')
       .set('Authorization', `Bearer ${user.token}`)
-      .send({ cpf_convidado: convidadoCpf, dataconvite: '2026-03-01' });
+      .send({ 
+        cpf_convidado: convidadoCpf, 
+        dataconvite: hoje,
+        data_final: hoje,
+        ConvitePadrao: false
+      
+      });
 
     expect(res.status).toBe(409);
     expect(res.body.message).toMatch(/already exists/i);
   });
+
 });
