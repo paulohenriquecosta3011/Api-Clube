@@ -11,7 +11,8 @@ import { AppError } from "../utils/AppError.js"; // importe sua classe de erro c
 import { generateToken } from "../utils/generateToken.js";
 import { verifyToken } from "../utils/verifyToken.js"; // certifique-se que o path está correto
 import generateVerificationCode from '../utils/generateVerificationCode.js';
-import { sendEmail } from './sendgrid.service.js';
+
+import { sendEmail } from './brevo.service.js';
 import { findEmpresaById } from '../repositories/empresas.repository.js';
 import { controlarLimiteEmail } from '../repositories/empresas.repository.js';
 
