@@ -77,6 +77,7 @@ export async function buscarConvitesPorUsuario({ id_user, data_inicial }) {
       ON g.cpf = c.cpf_convidado
 
     WHERE c.id_user = ?
+    and c.ConvitePadrao = 0
     `;
     const params = [id_user];
 
