@@ -1,27 +1,27 @@
-//sendgrid.service.js
-import sgMail from '@sendgrid/mail';
+import nodemailer from 'nodemailer';
 
-
-if (process.env.NODE_ENV !== 'test') {
-  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-}
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+});
 
 export async function sendEmail({ to, subject, html, from }) {
   try {
-    const msg = {
+    const info = await transporter.sendMail({
+      from: from || process.env.EMAIL_FROM || process.env.EMAIL_USER,
       to,
-      from: from || process.env.EMAIL_FROM,
       subject,
       html,
-    };
+    });
 
-    const response = await sgMail.send(msg);
+    console.log('E-mail enviado com sucesso:', info.messageId);
 
-
-    return response;
+    return info;
   } catch (error) {
-    console.error('Erro ao enviar email (SendGrid):');
-    console.error(error.response?.body || error.message);
+    console.error('Erro ao enviar e-mail pelo Gmail:', error.message);
 
     throw error;
   }
